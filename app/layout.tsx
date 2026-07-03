@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import NavPanel from "./components/NavPanel";
+import HabitsPanel from "./components/HabitsPanel";
 
 export const metadata: Metadata = {
   title: "Loopin",
@@ -13,7 +15,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="">
+        <main className="grid h-screen grid-cols-[15%_2fr_1fr]">
+          <NavPanel />
+          {children}
+          <HabitsPanel />
+        </main>
+      </body>
     </html>
   );
 }
