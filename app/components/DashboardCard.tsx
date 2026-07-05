@@ -1,6 +1,6 @@
 export default function DashboardCard() {
   return (
-    <div className="*:shadow-cart grid grid-cols-3 gap-x-4 *:h-[100px] *:rounded-lg *:bg-[#141c2d] **:text-slate-200">
+    <div className="*:shadow-cart *:bg-cart-bg grid grid-cols-3 gap-x-4 *:h-25 *:rounded-lg **:text-slate-200">
       <div className="flex flex-col items-center justify-center">
         <span>Curent streak</span>
         <span>[15]</span>

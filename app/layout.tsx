@@ -16,9 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="">
-        <main className="grid h-screen grid-cols-[15%_2fr_1fr]">
+        <main className="grid h-screen grid-cols-[15%_minmax(0,2fr)_1fr]">
           <NavPanel />
-          {children}
+          <div className="min-w-0 overflow-y-auto">{children}</div>
           <HabitsPanel />
         </main>
       </body>

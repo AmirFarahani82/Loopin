@@ -35,11 +35,11 @@ export default function NavPanel() {
             <li key={nav.name}>
               <Link
                 href={nav.href}
-                className={`hover:text-secondary-hover flex transform items-center gap-2 duration-200 ${pathname === nav.href ? "text-secondary-active" : "text-secondary"} `}
+                className={`hover:text-secondary-hover flex items-center gap-2 ${pathname === nav.href ? "text-secondary-active" : "text-secondary"} `}
               >
                 <span>{nav.icon}</span>
                 <span
-                  className={`${pathname === nav.href ? "translate-x-1.5" : ""}`}
+                  className={`transform duration-250 ${pathname === nav.href ? "translate-x-1.5" : ""}`}
                 >
                   {nav.name}
                 </span>
