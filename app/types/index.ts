@@ -44,3 +44,13 @@ type HabitLog = {
   value?: number;
   logged_at: string;
 };
+export type SigninForm = {
+  email: string;
+  password: string;
+};
+export type SignupForm = {
+  name: string;
+  email: string;
+  password: string;
+  timezone: string;
+};
