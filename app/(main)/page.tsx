@@ -1,6 +1,6 @@
-import DashboardCard from "./components/DashboardCard";
-import HabitHeatMap from "./components/HabitHeatMap";
-import HabitsPanel from "./components/HabitsPanel";
+import DashboardCard from "@/app/components/DashboardCard";
+import HabitHeatMap from "@/app/components/HabitHeatMap";
+import HabitsPanel from "@/app/components/HabitsPanel";
 
 export default function Home() {
   const today = new Date().toDateString();

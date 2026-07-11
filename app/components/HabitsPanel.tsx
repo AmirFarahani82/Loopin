@@ -1,4 +1,4 @@
-import HabitCard from "./HabitCard";
+import HabitCard from "@/app/components/HabitCard";
 
 export default function HabitsPanel() {
   return (
