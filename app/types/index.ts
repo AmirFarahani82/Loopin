@@ -24,7 +24,7 @@ type User = {
   name: string;
 };
 
-type Habit = {
+export type Habit = {
   id: string;
   user_id: string;
   name: string;
@@ -33,9 +33,10 @@ type Habit = {
   unit?: string;
   targetValue?: number;
   frequency: Frequency;
+  created_at: string;
 };
 
-type HabitLog = {
+export type HabitLog = {
   id: string;
   habit_id: string;
   user_id: string;

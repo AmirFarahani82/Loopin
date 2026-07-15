@@ -1,0 +1,56 @@
+import { Habit, HabitLog } from "@/app/types";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchHabits = (): Promise<Habit[]> =>
+  fetch("/api/habits").then((res) => res.json());
+const fetchHabitLog = (): Promise<HabitLog[]> =>
+  fetch("/api/habit-logs").then((res) => res.json());
+
+export function useTodayHabits(today: string) {
+  const {
+    data: habits = [],
+    isPending: habitsPending,
+    error: habitsError,
+  } = useQuery({
+    queryKey: ["habits"],
+    queryFn: fetchHabits,
+  });
+  const { data: habitLogs = [], isPending: habitLogsPending } = useQuery({
+    queryKey: ["habitLogs"],
+    queryFn: fetchHabitLog,
+  });
+
+  const todayLogs = (habitLogs || [])?.filter((log) => log.date === today);
+  const doneIDs = new Set(
+    todayLogs
+      .filter((log) => log.status === "completed")
+      .map((log) => log.habit_id),
+  );
+  const frozenIDs = new Set(
+    todayLogs
+      .filter((log) => log.status === "frozen")
+      .map((log) => log.habit_id),
+  );
+  const todayDoneHabits = habits.filter((habit) => doneIDs.has(habit.id));
+  const todayFrozenHabits = habits.filter((habit) => frozenIDs.has(habit.id));
+  const todayActiveHabits = habits.filter(
+    (habit) => !doneIDs.has(habit.id) && !frozenIDs.has(habit.id),
+  );
+
+  const totalHabitsCount = habits.length;
+  const todayProgress =
+    totalHabitsCount > 0
+      ? Math.round((todayDoneHabits.length / totalHabitsCount) * 100)
+      : 0;
+
+  return {
+    habits,
+    habitLogs,
+    todayDoneHabits,
+    todayFrozenHabits,
+    todayActiveHabits,
+    todayProgress,
+    isPending: habitsPending || habitLogsPending,
+    habitsError,
+  };
+}

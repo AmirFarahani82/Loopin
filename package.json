@@ -11,6 +11,8 @@
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.110.1",
+    "@tanstack/react-query": "^5.101.2",
+    "@tanstack/react-query-devtools": "^5.101.2",
     "@uiw/react-heat-map": "^2.3.4",
     "next": "16.2.9",
     "react": "19.2.7",
