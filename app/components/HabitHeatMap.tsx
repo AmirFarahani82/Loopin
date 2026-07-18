@@ -1,28 +1,45 @@
 "use client";
-import HeatMap from "@uiw/react-heat-map";
+import { useQuery } from "@tanstack/react-query";
+import HeatMap, { HeatMapValue } from "@uiw/react-heat-map";
+import { CustomTooltip } from "./ui/Tooltip";
+import CardSkeleton from "./CardSkeleton";
 
-const data = [
-  { date: "2026-01-01", count: 1 },
-  { date: "2026-01-02", count: 8 },
-  { date: "2026-01-03", count: 2 },
-  { date: "2026-01-04", count: 3 },
-  { date: "2026-01-05", count: 4 },
-  { date: "2026-01-06", count: 0 },
-  { date: "2026-01-07", count: 6 },
-  { date: "2026-01-08", count: 9 },
-  { date: "2026-02-08", count: 9 },
-  { date: "2026-04-08", count: 1 },
-  { date: "2026-07-05", count: 1 },
-
-  { date: "2026-12-31", count: 1 },
-];
-const heatmapColorTheme = {
-  dark: ["#12141a", "#6c31f6", "#8251f6", "#9b74f6"],
+const fetchHeatmap = async (
+  startDate: string,
+  endDate: string,
+): Promise<HeatMapValue[]> => {
+  const params = new URLSearchParams({ startDate, endDate });
+  const res = await fetch(`/api/heatmap?${params}`);
+  if (!res.ok) throw new Error("Failed to fetch heatmap data");
+  return res.json();
 };
-export default function HabitHeatMap() {
-  const today = new Date();
-  const twelveMonthsAgo = new Date();
-  twelveMonthsAgo.setFullYear(today.getFullYear() - 1);
+
+export default function HabitHeatMap({ today }: { today: string }) {
+  const twelveMonthsAgo = new Date(today);
+  twelveMonthsAgo.setFullYear(twelveMonthsAgo.getFullYear() - 1);
+  const twelveMonthsAgoStr = twelveMonthsAgo.toLocaleDateString("en-CA");
+  const {
+    data = [],
+    isPending,
+    error,
+  } = useQuery({
+    queryKey: ["heatmap", twelveMonthsAgoStr, today],
+    queryFn: () => fetchHeatmap(twelveMonthsAgoStr, today),
+  });
+
+  if (isPending) {
+    return (
+      <div className="flex w-full items-center justify-center p-4">
+        <CardSkeleton />
+      </div>
+    );
+  } else if (error) {
+    return (
+      <div className="flex w-full items-center justify-center p-14">
+        <p className="text-lg text-red-400">{error.message}</p>
+      </div>
+    );
+  }
   return (
     <div className="flex w-full flex-col gap-10 p-4">
       <h2 className="text-xl font-bold text-slate-200">
@@ -30,10 +47,10 @@ export default function HabitHeatMap() {
       </h2>
       <div className="w-full min-w-0 overflow-x-auto">
         <HeatMap
-          key={`${twelveMonthsAgo.toISOString()}-${data.length}`}
+          key={`${twelveMonthsAgo}-${today}-${data.length}`}
           value={data}
           startDate={twelveMonthsAgo}
-          endDate={today}
+          endDate={new Date(today)}
           weekLabels={["", "Mon", "", "Wed", "", "Fri", ""]}
           style={{ color: "#8b5cf6" }}
           className="w-207 max-w-none min-w-207"
@@ -41,9 +58,28 @@ export default function HabitHeatMap() {
           width={830}
           panelColors={{
             0: "#0d0a12",
-            2: "#441ca3",
-            4: "#683bd0",
-            6: "#9e79f4",
+            1: "#3a1987",
+            3: "#683bd0",
+            5: "#9e79f4",
+          }}
+          rectRender={(props, dayData) => {
+            const count = dayData.count || 0;
+            const formattedDate = dayData.date;
+            const { key, ...rectProps } = props;
+            return (
+              <CustomTooltip
+                key={props.key}
+                side="top"
+                content={
+                  <span>
+                    <strong>{count}</strong> habit{count !== 1 ? "s" : ""}{" "}
+                    completed on {formattedDate}
+                  </span>
+                }
+              >
+                <rect key={key} {...rectProps} />
+              </CustomTooltip>
+            );
           }}
         />
       </div>

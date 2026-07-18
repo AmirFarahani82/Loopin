@@ -3,6 +3,7 @@ import HabitHeatMap from "@/app/components/HabitHeatMap";
 import HabitsPanel from "@/app/components/HabitsPanel";
 import { getSession } from "@/libs/actions/auth";
 import { getHabitLog, getHabits } from "@/libs/data/habits";
+import { TooltipProvider } from "@/app/components/ui/TooltipConfig";
 import {
   dehydrate,
   HydrationBoundary,
@@ -48,7 +49,9 @@ export default async function Home() {
             </div>
           </div>
           <div className="shadow-main bg-tertiary border-br w-full min-w-0 rounded-xl border">
-            <HabitHeatMap />
+            <TooltipProvider>
+              <HabitHeatMap today={today} />
+            </TooltipProvider>
           </div>
         </div>
 
