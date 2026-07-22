@@ -2,6 +2,7 @@
 import HabitCard from "@/app/components/HabitCard";
 import CardSkeleton from "./CardSkeleton";
 import { useTodayHabits } from "@/libs/hooks/useTodayHabits";
+import { useModal } from "@/libs/context/ModalContext";
 
 export default function HabitsPanel({ today }: { today: string }) {
   const {
@@ -12,10 +13,11 @@ export default function HabitsPanel({ today }: { today: string }) {
     todayDoneHabits,
     todayFrozenHabits,
   } = useTodayHabits(today);
+  const { openModal } = useModal();
 
   if (isPending) {
     return (
-      <aside className="border-br space-y-4 border-l p-4">
+      <aside className="border-br h-screen space-y-4 border-l p-4">
         <CardSkeleton />
         <CardSkeleton />
         <CardSkeleton />
@@ -23,7 +25,7 @@ export default function HabitsPanel({ today }: { today: string }) {
     );
   } else if (habitsError) {
     return (
-      <aside className="border-br flex items-center justify-center border-l">
+      <aside className="border-br flex h-screen items-center justify-center border-l">
         <p className="text-center text-lg text-red-400">
           {habitsError.message}
         </p>
@@ -31,37 +33,53 @@ export default function HabitsPanel({ today }: { today: string }) {
     );
   } else if (!habits.length) {
     return (
-      <aside className="border-br flex items-center justify-center border-l">
+      <aside className="border-br flex h-screen flex-col items-center justify-center gap-4 border-l">
         <p className="text-center text-lg text-slate-200">
           You have no habit yet.
         </p>
+        <button
+          onClick={() => openModal()}
+          className="text-secondary hover:text-secondary-hover w-fit transform self-center text-lg duration-200 hover:cursor-pointer"
+        >
+          + Add habit
+        </button>
       </aside>
     );
   }
   return (
     <aside className="border-br h-screen space-y-6 overflow-y-scroll border-l p-4">
       {/*ACTIVE habits*/}
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl text-slate-200">Active Habits</h2>
-          <span className="text-slate-200">
-            {todayDoneHabits?.length} / {habits?.length}
-          </span>
+      <div className="flex max-h-2/3 flex-col gap-4">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl text-slate-200">Active Habits</h2>
+            <span className="text-slate-200">
+              {todayDoneHabits?.length} / {habits?.length}
+            </span>
+          </div>
+          <button
+            onClick={openModal}
+            className="text-secondary hover:text-secondary-hover w-fit transform self-center text-lg duration-200 hover:cursor-pointer"
+          >
+            + Add habit
+          </button>
         </div>
-        {habits.length > 0 &&
-          !todayActiveHabits?.length &&
-          !todayFrozenHabits?.length && (
-            <p className="py-8 text-center text-lg text-slate-200">
-              You have done all your habits
-            </p>
-          )}
-        {todayActiveHabits?.map((habit) => (
-          <HabitCard key={habit.id} habit={habit} />
-        ))}
+        <div className="flex w-full flex-col gap-4 overflow-y-auto">
+          {habits.length > 0 &&
+            !todayActiveHabits?.length &&
+            !todayFrozenHabits?.length && (
+              <p className="py-8 text-center text-lg text-slate-200">
+                You have done all your habits
+              </p>
+            )}
+          {todayActiveHabits?.map((habit) => (
+            <HabitCard key={habit.id} habit={habit} />
+          ))}
 
-        {todayFrozenHabits?.map((habit) => (
-          <HabitCard key={habit.id} habit={habit} isFrozen={true} />
-        ))}
+          {todayFrozenHabits?.map((habit) => (
+            <HabitCard key={habit.id} habit={habit} isFrozen={true} />
+          ))}
+        </div>
       </div>
 
       {/*// DONE habits*/}

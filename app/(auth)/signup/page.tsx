@@ -31,6 +31,7 @@ export default function Signup() {
           name="name"
           placeholder="Enter your name"
           register={register}
+          rules={{ required: "Name is required" }}
           error={errors.name}
         />
         <Input
@@ -38,6 +39,7 @@ export default function Signup() {
           name="email"
           placeholder="Enter your email"
           register={register}
+          rules={{ required: "Email is required" }}
           error={errors.email}
         />
         <Input
@@ -45,6 +47,7 @@ export default function Signup() {
           name="password"
           placeholder="Enter your password"
           register={register}
+          rules={{ required: "Password is required" }}
           error={errors.password}
         />
         <input

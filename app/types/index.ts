@@ -1,12 +1,11 @@
 type Frequency =
   | { type: "daily" }
-  | { type: "weekly" }
   | {
       type: "custom";
       days: ("Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun")[];
     };
 
-type Category =
+export type Category =
   | "health"
   | "fitness"
   | "mind"
