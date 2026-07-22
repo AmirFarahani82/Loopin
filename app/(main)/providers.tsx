@@ -1,40 +1,10 @@
-"use client";
-
-import {
-  environmentManager,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-function makeQueryClient() {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000,
-      },
-    },
-  });
-}
-
-let browserQueryClient: QueryClient | undefined = undefined;
-
-function getQueryClient() {
-  if (environmentManager.isServer()) {
-    return makeQueryClient();
-  } else {
-    if (!browserQueryClient) browserQueryClient = makeQueryClient();
-    return browserQueryClient;
-  }
-}
+import ModalContextProvider from "@/libs/providers/ModalContextProvider";
+import ReactQueryProvider from "@/libs/providers/ReactQueryProvider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  const queryClient = getQueryClient();
-
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <ReactQueryProvider>
+      <ModalContextProvider>{children}</ModalContextProvider>
+    </ReactQueryProvider>
   );
 }
