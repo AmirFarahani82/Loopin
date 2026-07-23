@@ -15,13 +15,17 @@ export async function requireSession() {
 export async function getHabits(): Promise<Habit[]> {
   const supabase = await createClient();
   const session = await requireSession();
+  const today = new Date().toLocaleDateString("en-CA", {
+    weekday: "short",
+    timeZone: session?.timezone,
+  });
   try {
     const { data: habits, error: habitsError } = await supabase
       .from("habits")
       .select("*")
       .eq("user_id", session?.id)
       .or(
-        `frequency->>type.eq.daily,and(frequency->>type.eq.custom,frequency->days.cs.["${session?.timezone}"])`,
+        `frequency->>type.eq.daily,and(frequency->>type.eq.custom,frequency->days.cs.["${today}"])`,
       );
 
     if (habitsError) {

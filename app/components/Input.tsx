@@ -23,6 +23,7 @@ export default function Input({
       <input
         {...register(name, rules)}
         type={type}
+        step="0.1"
         placeholder={placeholder}
         className="placeholder-secondary/50 border-br bg-tertiary focus:border-primary w-full [appearance:textfield] rounded-xl border p-2.5 text-white transition-colors outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
       />

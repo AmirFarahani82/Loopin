@@ -34,7 +34,13 @@ export type Habit = {
   frequency: Frequency;
   created_at: string;
 };
-
+export type Addhabit = Omit<
+  Habit,
+  "id" | "user_id" | "created_at" | "frequency"
+> & {
+  frequency: "daily" | "custom";
+  selectedDays: string[];
+};
 export type HabitLog = {
   id: string;
   habit_id: string;

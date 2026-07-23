@@ -1,19 +1,13 @@
 "use client";
 
-import { useModal } from "@/libs/context/ModalContext";
-import Input from "./Input";
-import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useModal } from "@/libs/context/ModalContext";
+import { addHabit } from "@/libs/actions/habits";
+import Input from "./Input";
+import { Addhabit } from "../types";
 
-type FormValues = {
-  name: string;
-  category: string;
-  frequency: "daily" | "custom";
-  selectedDays: string[];
-  type: "boolean" | "count";
-  unit?: string;
-  targetValue?: number;
-};
 type HabitTypeOption = {
   type: "boolean" | "count";
   label: string;
@@ -43,8 +37,10 @@ export default function AddHabitModal() {
     setValue,
     unregister,
     clearErrors,
+    reset,
+    handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({
+  } = useForm<Addhabit>({
     defaultValues: {
       name: "",
       category: "health",
@@ -55,6 +51,18 @@ export default function AddHabitModal() {
       targetValue: undefined,
     },
   });
+  const queryClient = useQueryClient();
+  const { mutate, isPending, error } = useMutation({
+    mutationFn: addHabit,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["habits"] });
+      reset();
+      closeModal();
+    },
+  });
+  const onSubmit = (data: Addhabit) => {
+    mutate(data);
+  };
   const frequency = watch("frequency");
   const selectedDays = watch("selectedDays");
   const type = watch("type");
@@ -87,7 +95,7 @@ export default function AddHabitModal() {
         >
           <h2 className="mb-15 text-2xl font-bold">Add new habit</h2>
           <form
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={handleSubmit(onSubmit)}
             className="flex w-4/5 flex-col gap-4"
           >
             <label htmlFor="name">
@@ -141,9 +149,11 @@ export default function AddHabitModal() {
                     const isSelected = selectedDays.includes(day);
                     return (
                       <button
+                        type="button"
                         key={day}
                         onClick={() => toggleDay(day)}
-                        className={`hover:shadow-main transform cursor-pointer rounded-xl px-4 py-2 duration-200 ${isSelected ? "bg-emerald-600 hover:bg-red-400/50" : "bg-slate-800 hover:bg-emerald-400/50"}`}
+                        disabled={isPending}
+                        className={`hover:shadow-main transform cursor-pointer rounded-xl px-4 py-2 duration-200 ${isSelected ? "bg-emerald-600 hover:bg-red-400/50" : "bg-slate-800 hover:bg-emerald-400/50"} disabled:cursor-not-allowed`}
                       >
                         {day}
                       </button>
@@ -164,7 +174,8 @@ export default function AddHabitModal() {
               {habitTypes.map((habit) => {
                 const isSelected = habit.type === type;
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={habit.type}
                     onClick={() => {
                       setValue("type", habit.type);
@@ -173,13 +184,14 @@ export default function AddHabitModal() {
                         unregister("targetValue");
                       }
                     }}
-                    className={`${isSelected ? "bg-emerald-600" : "bg-slate-800 hover:bg-emerald-400/50"} hover:shadow-main transform cursor-pointer rounded-xl p-4 duration-200`}
+                    disabled={isPending}
+                    className={`${isSelected ? "bg-emerald-600" : "bg-slate-800 hover:bg-emerald-400/50"} hover:shadow-main w-full transform cursor-pointer rounded-xl p-4 text-start duration-200 disabled:cursor-not-allowed`}
                   >
                     <p>
                       <span className="font-semibold">{habit.label}</span> -{" "}
                       <span className="italic">{habit.description}</span>
                     </p>
-                  </div>
+                  </button>
                 );
               })}
               {type === "count" && (
@@ -200,6 +212,7 @@ export default function AddHabitModal() {
                   </label>
                   <Input
                     type="number"
+
                     name="targetValue"
                     placeholder="Enter habit target value"
                     register={register}
@@ -216,19 +229,26 @@ export default function AddHabitModal() {
                 </>
               )}
             </div>
+            {error && (
+              <p className="text-center text-red-400!">{error.message}</p>
+            )}
             <div className="mt-5 flex justify-center gap-6">
               <button
-                type="reset"
-                onClick={() => closeModal()}
-                className="cursor-pointer rounded-md bg-red-500 p-2"
+                onClick={() => {
+                  closeModal();
+                  reset();
+                }}
+                disabled={isPending}
+                className="cursor-pointer rounded-md bg-red-500 p-2 disabled:cursor-not-allowed disabled:bg-red-500/30 disabled:text-slate-500"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="cursor-pointer rounded-md bg-emerald-500 px-4 py-2"
+                disabled={isPending}
+                className="cursor-pointer rounded-md bg-emerald-500 px-4 py-2 disabled:cursor-not-allowed disabled:bg-emerald-500/30 disabled:text-slate-500"
               >
-                Add
+                {isPending ? "Adding..." : "Add"}
               </button>
             </div>
           </form>
