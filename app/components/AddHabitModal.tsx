@@ -48,7 +48,7 @@ export default function AddHabitModal() {
       selectedDays: [],
       type: "boolean",
       unit: "",
-      targetValue: undefined,
+      target_value: undefined,
     },
   });
   const queryClient = useQueryClient();
@@ -181,7 +181,7 @@ export default function AddHabitModal() {
                       setValue("type", habit.type);
                       if (habit.type === "boolean") {
                         unregister("unit");
-                        unregister("targetValue");
+                        unregister("target_value");
                       }
                     }}
                     disabled={isPending}
@@ -224,7 +224,7 @@ export default function AddHabitModal() {
                       },
                       valueAsNumber: true,
                     }}
-                    error={errors.targetValue}
+                    error={errors.target_value}
                   />
                 </>
               )}

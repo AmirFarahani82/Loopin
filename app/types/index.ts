@@ -30,7 +30,7 @@ export type Habit = {
   category: Category;
   type: "boolean" | "count";
   unit?: string;
-  targetValue?: number;
+  target_value?: number;
   frequency: Frequency;
   created_at: string;
 };
