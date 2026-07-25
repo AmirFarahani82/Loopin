@@ -31,6 +31,8 @@ export function useTodayHabits(today: string) {
       .filter((log) => log.status === "frozen")
       .map((log) => log.habit_id),
   );
+  const frozenHabitlog = todayLogs.filter((log) => frozenIDs.has(log.habit_id));
+
   const todayDoneHabits = habits.filter((habit) => doneIDs.has(habit.id));
   const todayFrozenHabits = habits.filter((habit) => frozenIDs.has(habit.id));
   const todayActiveHabits = habits.filter(
@@ -46,6 +48,7 @@ export function useTodayHabits(today: string) {
   return {
     habits,
     habitLogs,
+    frozenHabitlog,
     todayDoneHabits,
     todayFrozenHabits,
     todayActiveHabits,

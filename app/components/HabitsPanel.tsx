@@ -12,6 +12,7 @@ export default function HabitsPanel({ today }: { today: string }) {
     todayActiveHabits,
     todayDoneHabits,
     todayFrozenHabits,
+    frozenHabitlog,
   } = useTodayHabits(today);
   const { openModal } = useModal();
 
@@ -77,7 +78,12 @@ export default function HabitsPanel({ today }: { today: string }) {
           ))}
 
           {todayFrozenHabits?.map((habit) => (
-            <HabitCard key={habit.id} habit={habit} isFrozen={true} />
+            <HabitCard
+              key={habit.id}
+              habit={habit}
+              isFrozen={true}
+              frozenHabitlog={frozenHabitlog}
+            />
           ))}
         </div>
       </div>

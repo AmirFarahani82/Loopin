@@ -1,21 +1,28 @@
 "use client";
 import { FaCheckCircle } from "react-icons/fa";
-import { Habit } from "../types";
+import { Habit, HabitLog } from "../types";
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { completeHabit } from "@/libs/actions/habits";
 
 export default function HabitCard({
   habit,
   isDone,
   isFrozen,
+  frozenHabitlog,
 }: {
   habit?: Habit;
   isDone?: boolean;
   isFrozen?: boolean;
+  frozenHabitlog?: HabitLog[];
 }) {
   const [value, setValue] = useState<null | number>(null);
   const queryClient = useQueryClient();
+  const frozenLogValue = frozenHabitlog
+    ?.filter((log) => log.habit_id === habit?.id)
+    .map((log) => log.value)
+    .pop();
+
   const { mutate, isPending } = useMutation({
     mutationFn: ({
       habitId,
@@ -70,14 +77,18 @@ export default function HabitCard({
       queryClient.invalidateQueries({ queryKey: ["habitLogs"] });
       queryClient.invalidateQueries({ queryKey: ["heatmap"] });
     },
+    onSuccess: () => {
+      setValue(null);
+    },
   });
   function handleCompleteHabit() {
     let status = "completed";
     let numValue: number | undefined = undefined;
+    const currentValue = frozenLogValue ?? 0;
     if (habit?.type === "count") {
       if (value === null || value <= 0) return;
 
-      numValue = Number(value);
+      numValue = currentValue + Number(value);
       const target = Number(habit.target_value ?? 0);
 
       if (numValue < target) {
@@ -109,7 +120,7 @@ export default function HabitCard({
       "border-sky-500/40 bg-sky-950/30 shadow-[0_0_15px_rgba(56,189,248,0.15)]";
     titleStyles = "text-sky-300 italic";
     buttonStyles =
-      "bg-sky-500/10 text-sky-300 border border-sky-400/30 cursor-not-allowed";
+      "bg-sky-500/10 text-sky-300  border border-sky-400/40 cursor-pointer shadow-[0_0_15px_rgba(56,189,248,0.15)] hover:-translate-y-0.5 active:translate-y-0.5";
   } else if (habit?.type === "count" && value === null) {
     buttonStyles = "bg-primary/30 cursor-not-allowed";
   }
@@ -120,25 +131,60 @@ export default function HabitCard({
       <h3 className={`text-lg font-semibold ${titleStyles}`}>{habit?.name}</h3>
 
       {habit?.type === "count" && !isDone && !isFrozen && (
-        <input
-          type="number"
-          onChange={(e) =>
-            setValue(e.target.value === "" ? null : Number(e.target.value))
-          }
-          value={value ?? ""}
-          min="0.01"
-          step="0.01"
-          placeholder="type value here"
-          className="placeholder-secondary/50 border-br bg-tertiary focus:border-primary w-full [appearance:textfield] rounded-xl border p-2.5 text-white transition-colors outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-        />
+        <>
+          <div>
+            <h4 className="font-bold text-slate-200">
+              Habit goal: {habit?.target_value}
+              {habit.unit}
+            </h4>
+            <p className="text-red-300 italic">
+              Make sure to reach your goal, otherwise, your habit will become
+              frozen!
+            </p>
+          </div>
+          <input
+            type="number"
+            onChange={(e) =>
+              setValue(e.target.value === "" ? null : Number(e.target.value))
+            }
+            value={value ?? ""}
+            min="0.01"
+            step="0.01"
+            placeholder="type value here"
+            className="placeholder-secondary/50 border-br bg-tertiary focus:border-primary w-full [appearance:textfield] rounded-xl border p-2.5 text-white transition-colors outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          />
+        </>
+      )}
+      {habit?.type === "count" && !isDone && isFrozen && (
+        <>
+          <div>
+            <h4 className="font-bold text-slate-200">
+              Habit goal: {habit?.target_value}
+              {habit.unit}
+            </h4>
+            <p className="text-sky-300 italic">
+              Current progress {frozenLogValue}, keep going and make sure to
+              reach your goal, otherwise, your habit will mark as frozen for
+              today
+            </p>
+          </div>
+          <input
+            type="number"
+            onChange={(e) =>
+              setValue(e.target.value === "" ? null : Number(e.target.value))
+            }
+            value={value ?? ""}
+            min="0.01"
+            step="0.01"
+            placeholder="type value here"
+            className="placeholder-secondary/50 border-br bg-tertiary focus:border-primary w-full [appearance:textfield] rounded-xl border p-2.5 text-white transition-colors outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          />
+        </>
       )}
       <button
         onClick={handleCompleteHabit}
         disabled={
-          isDone ||
-          isFrozen ||
-          isPending ||
-          (habit?.type === "count" && value === null)
+          isDone || isPending || (habit?.type === "count" && value === null)
         }
         className={`flex w-full items-center justify-center gap-2 rounded-xl p-2.5 font-medium transition-all duration-300 ${buttonStyles}`}
       >
