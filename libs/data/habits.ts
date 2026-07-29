@@ -11,7 +11,27 @@ export async function requireSession() {
 
   return session;
 }
+export async function getAllHabits() {
+  const supabase = await createClient();
+  const session = await requireSession();
 
+  try {
+    const { data, error } = await supabase
+      .from("habits")
+      .select("*")
+      .eq("user_id", session?.id);
+
+    if (error) {
+      throw new Error(`Failed to fetch habits — ${error.message}`, {
+        cause: error,
+      });
+    }
+    return data;
+  } catch (err) {
+    if (err instanceof Error) throw err;
+    throw new Error("Unexpected error while fetching habits", { cause: err });
+  }
+}
 export async function getHabits(): Promise<Habit[]> {
   const supabase = await createClient();
   const session = await requireSession();

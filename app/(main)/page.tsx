@@ -3,7 +3,7 @@ import HabitHeatMap from "@/app/components/HabitHeatMap";
 import HabitsPanel from "@/app/components/HabitsPanel";
 import AddHabitModal from "@/app/components/AddHabitModal";
 import { getSession } from "@/libs/actions/auth";
-import { getHabitLog, getHabits } from "@/libs/data/habits";
+import { getAllHabits, getHabitLog, getHabits } from "@/libs/data/habits";
 import { TooltipProvider } from "@/app/components/ui/TooltipConfig";
 import {
   dehydrate,
@@ -18,6 +18,10 @@ export default async function Home() {
     timeZone: user?.timezone,
   });
   await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["allHabits"],
+      queryFn: getAllHabits,
+    }),
     queryClient.prefetchQuery({
       queryKey: ["habits"],
       queryFn: getHabits,

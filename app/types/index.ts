@@ -16,7 +16,7 @@ export type Category =
   | "creative"
   | "routine";
 
-type LogStatus = "completed" | "frozen" | "broken";
+type LogStatus = "completed" | "frozen";
 
 type User = {
   id: string;
@@ -49,6 +49,16 @@ export type HabitLog = {
   status: LogStatus;
   value?: number;
   logged_at: string;
+};
+export type StreakResult = {
+  habitId: string;
+  current_streak: number;
+  totalValue?: number;
+  last_completed_date: string | null;
+  is_active: boolean;
+  freeze_days_used: number;
+  last_log_date: string | null;
+  missed_days: string[];
 };
 export type SigninForm = {
   email: string;
