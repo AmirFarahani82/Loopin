@@ -1,9 +1,7 @@
 "use client";
 import { FaCheckCircle } from "react-icons/fa";
 import { Habit, HabitLog } from "../types";
-import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { completeHabit } from "@/libs/actions/habits";
+import { useCompleteHabit } from "@/libs/hooks/useCompleteHabit";
 
 export default function HabitCard({
   habit,
@@ -11,99 +9,19 @@ export default function HabitCard({
   isFrozen,
   frozenHabitlog,
 }: {
-  habit?: Habit;
+  habit: Habit;
   isDone?: boolean;
   isFrozen?: boolean;
   frozenHabitlog?: HabitLog[];
 }) {
-  const [value, setValue] = useState<null | number>(null);
-  const queryClient = useQueryClient();
-  const frozenLogValue = frozenHabitlog
-    ?.filter((log) => log.habit_id === habit?.id)
-    .map((log) => log.value)
-    .pop();
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: ({
-      habitId,
-      status,
-      value,
-    }: {
-      habitId: string;
-      status: string;
-      value?: number;
-    }) => completeHabit(habitId, status, value),
-    onMutate: async (newLog) => {
-      await queryClient.cancelQueries({ queryKey: ["habits"] });
-      await queryClient.cancelQueries({ queryKey: ["habitLogs"] });
-      await queryClient.cancelQueries({ queryKey: ["heatmap"] });
-      const previousLogs = queryClient.getQueryData(["habitLogs"]);
-      const previousHeatmap = queryClient.getQueryData(["heatmap"]);
-      const todayStr = new Date().toLocaleDateString("en-CA");
-
-      queryClient.setQueryData(["habitLogs"], (old: any) => {
-        if (!old) return old;
-        const optimisticEntry = {
-          id: `temp-${Date.now()}`,
-          habit_id: newLog.habitId,
-          status: newLog.status,
-          value: newLog.value ?? null,
-          date: todayStr,
-          logged_at: new Date().toISOString(),
-        };
-
-        if (Array.isArray(old)) {
-          const filtered = old.filter(
-            (log) =>
-              !(log.habit_id === newLog.habitId && log.date === todayStr),
-          );
-          return [...filtered, optimisticEntry];
-        }
-        return old;
-      });
-      return { previousLogs, previousHeatmap };
-    },
-    onError: (err, newLog, context) => {
-      console.error("Mutation failed, rolling back...", err);
-      if (context?.previousLogs) {
-        queryClient.setQueryData(["habitLogs"], context.previousLogs);
-      }
-      if (context?.previousHeatmap) {
-        queryClient.setQueryData(["heatmap"], context.previousHeatmap);
-      }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["habits"] });
-      queryClient.invalidateQueries({ queryKey: ["habitLogs"] });
-      queryClient.invalidateQueries({ queryKey: ["heatmap"] });
-    },
-    onSuccess: () => {
-      setValue(null);
-    },
-  });
-  function handleCompleteHabit() {
-    let status = "completed";
-    let numValue: number | undefined = undefined;
-    const currentValue = frozenLogValue ?? 0;
-    if (habit?.type === "count") {
-      if (value === null || value <= 0) return;
-
-      numValue = currentValue + Number(value);
-      const target = Number(habit.target_value ?? 0);
-
-      if (numValue < target) {
-        status = "frozen";
-      } else {
-        status = "completed";
-      }
-    }
-
-    mutate({
-      habitId: habit!.id,
-      status,
-      value: numValue,
-    });
-  }
+  const {
+    value,
+    setValue,
+    frozenLogValue,
+    handleCompleteHabit,
+    isPending,
+    isInputInvalid,
+  } = useCompleteHabit(habit, frozenHabitlog);
   let cardStyles = "border-slate-700 bg-cart-bg shadow-cart";
   let titleStyles = "text-slate-200";
   let buttonStyles =
@@ -121,7 +39,7 @@ export default function HabitCard({
     titleStyles = "text-sky-300 italic";
     buttonStyles =
       "bg-sky-500/10 text-sky-300  border border-sky-400/40 cursor-pointer shadow-[0_0_15px_rgba(56,189,248,0.15)] hover:-translate-y-0.5 active:translate-y-0.5";
-  } else if (habit?.type === "count" && value === null) {
+  } else if (isInputInvalid) {
     buttonStyles = "bg-primary/30 cursor-not-allowed";
   }
   return (
@@ -134,8 +52,7 @@ export default function HabitCard({
         <>
           <div>
             <h4 className="font-bold text-slate-200">
-              Habit goal: {habit?.target_value}
-              {habit.unit}
+              Habit goal: {habit?.target_value} {habit.unit}
             </h4>
             <p className="text-red-300 italic">
               Make sure to reach your goal, otherwise, your habit will become
@@ -159,13 +76,12 @@ export default function HabitCard({
         <>
           <div>
             <h4 className="font-bold text-slate-200">
-              Habit goal: {habit?.target_value}
-              {habit.unit}
+              Habit goal: {habit?.target_value} {habit.unit}
             </h4>
             <p className="text-sky-300 italic">
-              Current progress {frozenLogValue}, keep going and make sure to
-              reach your goal, otherwise, your habit will mark as frozen for
-              today
+              Current progress: {frozenLogValue}, keep going,{" "}
+              {habit.target_value! - frozenLogValue!} more {habit.unit} to reach
+              your goal, otherwise, your habit will mark as frozen for today
             </p>
           </div>
           <input
@@ -183,9 +99,7 @@ export default function HabitCard({
       )}
       <button
         onClick={handleCompleteHabit}
-        disabled={
-          isDone || isPending || (habit?.type === "count" && value === null)
-        }
+        disabled={isDone || isPending || isInputInvalid}
         className={`flex w-full items-center justify-center gap-2 rounded-xl p-2.5 font-medium transition-all duration-300 ${buttonStyles}`}
       >
         {" "}

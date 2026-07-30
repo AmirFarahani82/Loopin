@@ -56,6 +56,7 @@ export default function AddHabitModal() {
     mutationFn: addHabit,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
+      queryClient.invalidateQueries({ queryKey: ["allHabits"] });
       reset();
       closeModal();
     },
@@ -207,13 +208,13 @@ export default function AddHabitModal() {
                     rules={{ required: "Unit is required" }}
                     error={errors.unit}
                   />
-                  <label htmlFor="targetValue" className="block">
+                  <label htmlFor="target_value" className="block">
                     Target value <span className="text-red-500">*</span>
                   </label>
                   <Input
                     type="number"
 
-                    name="targetValue"
+                    name="target_value"
                     placeholder="Enter habit target value"
                     register={register}
                     rules={{
