@@ -1,11 +1,16 @@
 import { Habit, HabitLog } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
 
-const fetchHabits = (): Promise<Habit[]> =>
-  fetch("/api/habits").then((res) => res.json());
-const fetchHabitLog = (): Promise<HabitLog[]> =>
-  fetch("/api/habit-logs").then((res) => res.json());
-
+const fetchHabits = async (): Promise<Habit[]> => {
+  const res = await fetch("/api/habits");
+  if (!res.ok) throw new Error("Failed to fetch habits");
+  return res.json();
+};
+const fetchHabitLog = async (): Promise<HabitLog[]> => {
+  const res = await fetch("/api/habit-logs");
+  if (!res.ok) throw new Error("Failed to fetch habit logs");
+  return res.json();
+};
 export function useTodayHabits(today: string) {
   const {
     data: habits = [],

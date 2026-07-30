@@ -6,17 +6,23 @@ import { calculateStreak } from "@/libs/data/calculateStreak";
 import { useAllHabits } from "@/libs/hooks/useAllHabits";
 
 export default function DashboardCard({ today }: { today: string }) {
-  const { todayProgress, isPending } = useTodayHabits(today);
+  const { todayProgress, isPending: todayPending } = useTodayHabits(today);
 
-  const { habits, habitLog } = useAllHabits();
+  const {
+    habits,
+    habitLog,
+    isPending: allPending,
+    isError,
+    error,
+  } = useAllHabits();
 
   const habitLogMap = new Map();
-  habitLog?.forEach((log) => {
+  habitLog.forEach((log) => {
     if (!habitLogMap.has(log.habit_id)) habitLogMap.set(log.habit_id, []);
 
     habitLogMap.get(log.habit_id).push(log);
   });
-  const habitsStreak = habits?.map((habit) => {
+  const habitsStreak = habits.map((habit) => {
     const eachHabitLogs = habitLogMap.get(habit.id) || [];
     const eachHabitStreak = calculateStreak(habit, eachHabitLogs, today);
     return eachHabitStreak;
@@ -25,13 +31,13 @@ export default function DashboardCard({ today }: { today: string }) {
   const longestStreak = habitsStreak?.reduce((max, curr) => {
     return curr.current_streak > max.current_streak ? curr : max;
   }, habitsStreak?.[0]);
-  const longestStreakHabit = habits?.find(
+  const longestStreakHabit = habits.find(
     (h) => h.id === longestStreak?.habitId,
   );
   const ActiveStreak = habitsStreak?.filter((a) => a.is_active === true);
   const streakCardContent = { ...longestStreak, ...longestStreakHabit };
 
-  if (isPending) {
+  if (todayPending || allPending) {
     return (
       <div className="flex gap-4">
         <CardSkeleton />
@@ -39,15 +45,15 @@ export default function DashboardCard({ today }: { today: string }) {
         <CardSkeleton />
       </div>
     );
-  }
-
-  if (habits?.length === 0) {
+  } else if (isError) {
+    return <p className="text-center text-lg text-red-400">{error?.message}</p>;
+  } else if (habits.length === 0) {
     return (
       <p className="text-center text-lg text-slate-200">
         Add habit to see your progress here.
       </p>
     );
-  } else if (habitLog?.length === 0) {
+  } else if (habitLog.length === 0) {
     return (
       <p className="text-center text-lg text-slate-200">
         No habit activity yet. Start tracking today!

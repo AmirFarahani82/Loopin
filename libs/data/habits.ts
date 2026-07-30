@@ -15,22 +15,18 @@ export async function getAllHabits() {
   const supabase = await createClient();
   const session = await requireSession();
 
-  try {
-    const { data, error } = await supabase
-      .from("habits")
-      .select("*")
-      .eq("user_id", session?.id);
+  const { data, error } = await supabase
+    .from("habits")
+    .select("*")
+    .eq("user_id", session?.id);
 
-    if (error) {
-      throw new Error(`Failed to fetch habits — ${error.message}`, {
-        cause: error,
-      });
-    }
-    return data;
-  } catch (err) {
-    if (err instanceof Error) throw err;
-    throw new Error("Unexpected error while fetching habits", { cause: err });
+  if (error) {
+    throw new Error(`Failed to fetch habits — ${error.message}`, {
+      cause: error,
+    });
   }
+
+  return data;
 }
 export async function getHabits(): Promise<Habit[]> {
   const supabase = await createClient();
@@ -39,46 +35,35 @@ export async function getHabits(): Promise<Habit[]> {
     weekday: "short",
     timeZone: session?.timezone,
   });
-  try {
-    const { data: habits, error: habitsError } = await supabase
-      .from("habits")
-      .select("*")
-      .eq("user_id", session?.id)
-      .or(
-        `frequency->>type.eq.daily,and(frequency->>type.eq.custom,frequency->days.cs.["${today}"])`,
-      );
 
-    if (habitsError) {
-      throw new Error(`Failed to fetch habits — ${habitsError.message}`, {
-        cause: habitsError,
-      });
-    }
-    return habits;
-  } catch (err) {
-    if (err instanceof Error) throw err;
-    throw new Error("Unexpected error while fetching habits", { cause: err });
+  const { data: habits, error: habitsError } = await supabase
+    .from("habits")
+    .select("*")
+    .eq("user_id", session?.id)
+    .or(
+      `frequency->>type.eq.daily,and(frequency->>type.eq.custom,frequency->days.cs.["${today}"])`,
+    );
+
+  if (habitsError) {
+    throw new Error(`Failed to fetch habits — ${habitsError.message}`, {
+      cause: habitsError,
+    });
   }
+  return habits;
 }
 
 export async function getHabitLog(): Promise<HabitLog[]> {
   const supabase = await createClient();
   const session = await requireSession();
-  try {
-    const { data: habitLogs, error } = await supabase
-      .from("habit_logs")
-      .select("*")
-      .eq("user_id", session?.id);
+  const { data: habitLogs, error } = await supabase
+    .from("habit_logs")
+    .select("*")
+    .eq("user_id", session?.id);
 
-    if (error) {
-      throw new Error(`Failed to fetch habit logs - ${error.message}`, {
-        cause: error,
-      });
-    }
-    return habitLogs;
-  } catch (err) {
-    if (err instanceof Error) throw err;
-    throw new Error("Unexpected error while fetching habit logs", {
-      cause: err,
+  if (error) {
+    throw new Error(`Failed to fetch habit logs - ${error.message}`, {
+      cause: error,
     });
   }
+  return habitLogs;
 }
