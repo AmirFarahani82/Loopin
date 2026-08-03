@@ -42,7 +42,7 @@ export default async function Home() {
                 <h2 className="text-3xl font-bold text-slate-200 capitalize">
                   Welcome Back, {user?.name}
                 </h2>
-                <h3 className="text-text-lg text-slate-400">
+                <h3 className="text-lg text-slate-400">
                   Here's your productivity overview for today.
                 </h3>
               </div>
