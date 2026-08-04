@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteHabit } from "@/libs/actions/habits";
 import { useState } from "react";
 import { useModal } from "@/libs/context/ModalContext";
+import { habitToFormValue } from "../types";
 
 export function HabitsManagement() {
   const [deletingId, setDeletingId] = useState("");
@@ -26,6 +27,7 @@ export function HabitsManagement() {
       queryClient.invalidateQueries({ queryKey: ["allHabits"] });
     },
   });
+
   if (isPending) {
     return (
       <div className="mx-auto mt-4 space-y-4">
@@ -69,7 +71,13 @@ export function HabitsManagement() {
             ) : (
               <>
                 <FiEdit2
-                  onClick={openModal}
+                  onClick={() =>
+                    openModal({
+                      type: "edit",
+                      id: habit.id,
+                      data: habitToFormValue(habit),
+                    })
+                  }
                   className="text-secondary hover:text-secondary-hover size-5 transform cursor-pointer duration-200"
                 />
                 <RiDeleteBin6Line

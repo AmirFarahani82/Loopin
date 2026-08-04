@@ -1,11 +1,12 @@
 "use server";
 
-import { Addhabit } from "@/app/types";
+import { HabitFormValues } from "@/app/types";
 import { createClient } from "@/utils/supabase/server";
 import { getSession } from "./auth";
 import { revalidatePath } from "next/cache";
+import { requireSession } from "../data/habits";
 
-export async function addHabit(data: Addhabit) {
+export async function addHabit(data: HabitFormValues) {
   const supabase = await createClient();
   const session = await getSession();
   const frequency =
@@ -78,4 +79,33 @@ export async function deleteHabit(habitId: string) {
 
     throw new Error("Unexpected error occurred");
   }
+}
+
+export async function editHabit({
+  id,
+  data,
+}: {
+  id: string;
+  data: HabitFormValues;
+}) {
+  const supabase = await createClient();
+
+  const frequency =
+    data.frequency === "daily"
+      ? { type: "daily" }
+      : { type: "custom", days: data.selectedDays };
+
+  const { error } = await supabase
+    .from("habits")
+    .update({
+      name: data.name.trim(),
+      category: data.category,
+      frequency,
+      type: data.type,
+      unit: data.type === "count" ? data.unit?.trim() : null,
+      target_value: data.type === "count" ? data.target_value : null,
+    })
+    .eq("id", id);
+
+  if (error) throw new Error(`error when adding new habit - ${error.message}`);
 }

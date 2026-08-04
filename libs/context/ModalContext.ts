@@ -1,8 +1,9 @@
 "use client";
 import { createContext, useContext, useState } from "react";
+import { ModalType } from "../providers/ModalContextProvider";
 type ModalContextType = {
-  isOpen: boolean;
-  openModal: () => void;
+  modal: ModalType;
+  openModal: (type: ModalType) => void;
   closeModal: () => void;
 };
 export const ModalContext = createContext<ModalContextType | null>(null);

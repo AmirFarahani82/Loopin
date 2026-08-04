@@ -39,7 +39,7 @@ export default function HabitsPanel({ today }: { today: string }) {
           You have no habit yet.
         </p>
         <button
-          onClick={() => openModal()}
+          onClick={() => openModal({ type: "add" })}
           className="text-secondary hover:text-secondary-hover w-fit transform self-center text-lg duration-200 hover:cursor-pointer"
         >
           + Add habit
@@ -59,7 +59,7 @@ export default function HabitsPanel({ today }: { today: string }) {
             </span>
           </div>
           <button
-            onClick={openModal}
+            onClick={() => openModal({ type: "add" })}
             className="text-secondary hover:text-secondary-hover w-fit transform self-center text-lg duration-200 hover:cursor-pointer"
           >
             + Add habit

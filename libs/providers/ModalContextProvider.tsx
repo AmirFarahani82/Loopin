@@ -1,21 +1,26 @@
 "use client";
 import { useState } from "react";
 import { ModalContext } from "../context/ModalContext";
+import { HabitFormValues, Habit } from "@/app/types";
+export type ModalType =
+  | { type: "add" }
+  | { type: "edit"; id: string; data: HabitFormValues }
+  | { type: null };
 
 export default function ModalContextProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  function openModal() {
-    setIsOpen(true);
+  const [modal, setModal] = useState<ModalType>({ type: null });
+  function openModal(type: ModalType) {
+    setModal(type);
   }
   function closeModal() {
-    setIsOpen(false);
+    setModal({ type: null });
   }
   return (
-    <ModalContext value={{ isOpen, openModal, closeModal }}>
+    <ModalContext value={{ modal, openModal, closeModal }}>
       {children}
     </ModalContext>
   );

@@ -1,7 +1,6 @@
 import DashboardCard from "@/app/components/DashboardCard";
 import HabitHeatMap from "@/app/components/HabitHeatMap";
 import HabitsPanel from "@/app/components/HabitsPanel";
-import AddHabitModal from "@/app/components/AddHabitModal";
 import { getSession } from "@/libs/actions/auth";
 import { getAllHabits, getHabitLog, getHabits } from "@/libs/data/habits";
 import { TooltipProvider } from "@/app/components/ui/TooltipConfig";
@@ -60,7 +59,6 @@ export default async function Home() {
           </div>
         </div>
         <HabitsPanel today={today} />
-        <AddHabitModal />
       </div>
     </HydrationBoundary>
   );

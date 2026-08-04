@@ -1,6 +1,7 @@
 import React from "react";
 import NavPanel from "@/app/components/NavPanel";
 import Providers from "./providers";
+import HabitFormModal from "../components/HabitFormModal";
 
 export default function MainLayout({
   children,
@@ -11,7 +12,10 @@ export default function MainLayout({
     <Providers>
       <main className="grid h-screen grid-cols-[15%_minmax(0,2fr)]">
         <NavPanel />
-        <div className="min-w-0 overflow-y-auto">{children}</div>
+        <div className="relative min-w-0 overflow-y-auto">
+          {children}
+          <HabitFormModal />
+        </div>
       </main>
     </Providers>
   );
