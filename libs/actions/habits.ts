@@ -3,6 +3,7 @@
 import { Addhabit } from "@/app/types";
 import { createClient } from "@/utils/supabase/server";
 import { getSession } from "./auth";
+import { revalidatePath } from "next/cache";
 
 export async function addHabit(data: Addhabit) {
   const supabase = await createClient();
@@ -61,5 +62,20 @@ export async function completeHabit(
       throw new Error(
         `Unexpected error while compeleting habit - ${err.message}`,
       );
+  }
+}
+export async function deleteHabit(habitId: string) {
+  const supabase = await createClient();
+  try {
+    const { error } = await supabase.from("habits").delete().eq("id", habitId);
+
+    if (error) throw new Error("Failed to delete habit");
+
+    revalidatePath("/settings");
+  } catch (error) {
+    if (error instanceof Error)
+      throw new Error(`Unexpected error - ${error.message}`);
+
+    throw new Error("Unexpected error occurred");
   }
 }
