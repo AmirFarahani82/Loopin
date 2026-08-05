@@ -1,7 +1,7 @@
 import React from "react";
 import NavPanel from "@/app/components/NavPanel";
 import Providers from "./providers";
-import HabitFormModal from "../components/HabitFormModal";
+import HabitFormModal from "../components/HabitFormModal/HabitFormModal";
 
 export default function MainLayout({
   children,

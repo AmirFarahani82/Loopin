@@ -1,6 +1,6 @@
 "use server";
 
-import { HabitFormValues } from "@/app/types";
+import { HabitFormValues } from "@/app/components/HabitFormModal/types";
 import { createClient } from "@/utils/supabase/server";
 import { getSession } from "./auth";
 import { revalidatePath } from "next/cache";

@@ -8,12 +8,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteHabit } from "@/libs/actions/habits";
 import { useState } from "react";
 import { useModal } from "@/libs/context/ModalContext";
-import { habitToFormValue } from "../types";
+import { habitToFormValue } from "./HabitFormModal/types";
+import Link from "next/link";
 
 export function HabitsManagement() {
   const [deletingId, setDeletingId] = useState("");
   const queryClient = useQueryClient();
-  const { habits, isPending } = useAllHabits();
+  const { habits, isPending, error: habitsError } = useAllHabits();
   const { openModal } = useModal();
   const {
     mutate,
@@ -37,6 +38,23 @@ export function HabitsManagement() {
       </div>
     );
   }
+  if (habitsError) {
+    return (
+      <p className="mt-4 text-center text-red-400">{habitsError.message}</p>
+    );
+  }
+  if (habits.length === 0) {
+    return (
+      <p className="mt-4 text-center text-slate-200">
+        You have no habits to manage. Please go to{" "}
+        <Link className="text-secondary-active font-semibold" href="/dashboard">
+          dashboard
+        </Link>{" "}
+        to create one!
+      </p>
+    );
+  }
+
   return (
     <ul className="mx-auto mt-4 w-4/5 space-y-4">
       {habits.map((habit) => (
