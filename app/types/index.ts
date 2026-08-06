@@ -44,14 +44,20 @@ export type HabitLog = {
   value?: number;
   logged_at: string;
 };
-export type StreakResult = {
-  habitId: string;
+
+export type HabitAnalysis = {
+  habit_id: string;
   current_streak: number;
-  totalValue?: number;
+  longest_streak: number;
+  total_value?: number;
+  current_streak_total_value?: number;
   last_completed_date: string | null;
   is_active: boolean;
   freeze_days_used: number;
   last_log_date: string | null;
+  completion_rate: number;
+  total_scheduled_days: number;
+  total_completed_days: number;
   missed_days: string[];
 };
 export type SigninForm = {

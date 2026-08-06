@@ -2,8 +2,8 @@
 import { FaFireFlameCurved } from "react-icons/fa6";
 import CardSkeleton from "./CardSkeleton";
 import { useTodayHabits } from "@/libs/hooks/useTodayHabits";
-import { calculateStreak } from "@/libs/data/calculateStreak";
 import { useAllHabits } from "@/libs/hooks/useAllHabits";
+import { useHabitsAnalysis } from "@/libs/hooks/useHabitsAnalysis";
 
 export default function DashboardCard({ today }: { today: string }) {
   const { todayProgress, isPending: todayPending } = useTodayHabits(today);
@@ -15,29 +15,19 @@ export default function DashboardCard({ today }: { today: string }) {
     isError,
     error,
   } = useAllHabits();
+  const { data: habitsAnalysis = [], isPending: habitsAnalysisPending } =
+    useHabitsAnalysis();
 
-  const habitLogMap = new Map();
-  habitLog.forEach((log) => {
-    if (!habitLogMap.has(log.habit_id)) habitLogMap.set(log.habit_id, []);
-
-    habitLogMap.get(log.habit_id).push(log);
-  });
-  const habitsStreak = habits.map((habit) => {
-    const eachHabitLogs = habitLogMap.get(habit.id) || [];
-    const eachHabitStreak = calculateStreak(habit, eachHabitLogs, today);
-    return eachHabitStreak;
-  });
-
-  const longestStreak = habitsStreak?.reduce((max, curr) => {
+  const longestStreak = habitsAnalysis.reduce((max, curr) => {
     return curr.current_streak > max.current_streak ? curr : max;
-  }, habitsStreak?.[0]);
+  }, habitsAnalysis[0]);
   const longestStreakHabit = habits.find(
-    (h) => h.id === longestStreak?.habitId,
+    (h) => h.id === longestStreak?.habit_id,
   );
-  const ActiveStreak = habitsStreak?.filter((a) => a.is_active === true);
+  const activeStreak = habitsAnalysis.filter((a) => a.is_active === true);
   const streakCardContent = { ...longestStreak, ...longestStreakHabit };
 
-  if (todayPending || allPending) {
+  if (todayPending || allPending || habitsAnalysisPending) {
     return (
       <div className="flex gap-4">
         <CardSkeleton />
@@ -68,12 +58,12 @@ export default function DashboardCard({ today }: { today: string }) {
         <span>
           {streakCardContent.type === "boolean"
             ? `${streakCardContent.name} ${streakCardContent.current_streak}  ${streakCardContent.current_streak === 1 ? "day" : "days"} streak`
-            : `${streakCardContent.name} ${streakCardContent.totalValue} ${streakCardContent.unit} over ${streakCardContent.current_streak} ${streakCardContent.current_streak === 1 ? "day" : "days"} `}
+            : `${streakCardContent.name} ${streakCardContent.total_value} ${streakCardContent.unit} over ${streakCardContent.current_streak} ${streakCardContent.current_streak === 1 ? "day" : "days"} `}
         </span>
       </div>
       <div className="flex flex-col items-center justify-center">
         <span>Active streaks</span>
-        {ActiveStreak?.length} / {habits?.length}
+        {activeStreak?.length} / {habits?.length}
       </div>
       <div className="flex flex-col items-center justify-center">
         <span>Today completion rate</span>
