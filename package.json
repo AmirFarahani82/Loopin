@@ -16,6 +16,7 @@
     "@tanstack/react-query-devtools": "^5.101.2",
     "@uiw/react-heat-map": "^2.3.4",
     "next": "16.2.9",
+    "openai": "^7.4.0",
     "react": "19.2.7",
     "react-activity-calendar": "^3.2.0",
     "react-dom": "19.2.7",

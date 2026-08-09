@@ -1,4 +1,4 @@
-type Frequency =
+export type Frequency =
   | { type: "daily" }
   | {
       type: "custom";
@@ -59,6 +59,11 @@ export type HabitAnalysis = {
   total_scheduled_days: number;
   total_completed_days: number;
   missed_days: string[];
+};
+export type HabitAnalysisData = {
+  stats: HabitAnalysis | undefined;
+  logs: HabitLog[];
+  habit: Habit;
 };
 export type SigninForm = {
   email: string;
