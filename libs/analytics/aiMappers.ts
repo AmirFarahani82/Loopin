@@ -1,4 +1,9 @@
-import { Frequency, HabitAnalysisData } from "@/app/types";
+import { Frequency, Habit, HabitAnalysisData, HabitLog } from "@/app/types";
+import { createClient } from "@/utils/supabase/server";
+import { getAllHabits, getHabitLog, requireSession } from "../data/habits";
+import { getHabitAnalysis } from "../data/habitAnalysis";
+import { createAnalysisData } from "./core";
+import OpenAI from "openai";
 function isScheduledDay(frequency: Frequency, dateStr: string): boolean {
   if (frequency.type === "daily") return true;
 
@@ -13,6 +18,27 @@ function getDateBefore(dateStr: string, days: number): string {
   d.setUTCDate(d.getUTCDate() - days);
   return d.toISOString().split("T")[0];
 }
+
+function summarizeRange(habit: Habit, logs: HabitLog[], dates: string[]) {
+  let scheduled = 0;
+  let completed = 0;
+  let totalValue = 0;
+  dates.forEach((date) => {
+    if (isScheduledDay(habit.frequency, date)) {
+      scheduled++;
+      const logDay = logs.find((log) => log.date === date);
+      if (logDay?.status === "completed") completed++;
+      if (habit.type === "count" && logDay?.value) totalValue += logDay.value;
+    }
+  });
+  return {
+    scheduled,
+    completed,
+    successRate: scheduled > 0 ? Math.round((completed / scheduled) * 100) : 0,
+    ...(habit.type === "count" && { totalValue, unit: habit.unit }),
+  };
+}
+
 export function createDailyAiPayload(
   analysisData: HabitAnalysisData[],
   today: string,
@@ -30,8 +56,8 @@ export function createDailyAiPayload(
     return {
       habit: habit.name,
       status: statusToday,
-      streak: stats?.current_streak || 0,
-      successRate: `${stats?.completion_rate}%` || "0%",
+      Currentstreak: stats?.current_streak ?? 0,
+      successRate: stats?.completion_rate ?? 0,
     };
   });
   return payload;
@@ -42,31 +68,120 @@ export function createWeeklyAiPayload(
   today: string,
 ) {
   const last7Days = Array.from({ length: 7 }, (_, i) =>
-    getDateBefore(today, i),
+    getDateBefore(today, i + 1),
   );
-
+  const previous7Days = Array.from({ length: 7 }, (_, i) =>
+    getDateBefore(today, i + 8),
+  );
   const payload = analysisData.map(({ habit, stats, logs }) => {
-    let weeklyScheduled = 0;
-    let weeklyCompleted = 0;
-
-    last7Days.forEach((date) => {
-      const isScheduled = isScheduledDay(habit.frequency, date);
-      const dayLog = logs.find((log) => log.date === date);
-      if (isScheduled) {
-        weeklyScheduled++;
-        if (dayLog?.status === "completed") weeklyCompleted++;
-      }
-    });
+    const currentWeek = summarizeRange(habit, logs, last7Days);
+    const previousWeek = summarizeRange(habit, logs, previous7Days);
 
     return {
       habit: habit.name,
-      weeklyPerformance: `${weeklyCompleted}/${weeklyScheduled}`,
-      streak: stats?.current_streak || 0,
-      overallSuccessRate: stats?.completion_rate
-        ? `${stats.completion_rate}%`
-        : "0%",
+      currentStreak: stats?.current_streak ?? 0,
+      currentWeek,
+      previousWeek,
+      overallSuccessRate: stats?.completion_rate ?? 0,
     };
   });
 
-  return payload.filter((p) => p.weeklyPerformance !== "0/0");
+  return payload.filter(
+    (p) => p.currentWeek.scheduled > 0 || p.previousWeek.scheduled > 0,
+  );
+}
+export async function getOrGenerateInsight(
+  type: "daily" | "weekly",
+  systemPrompt: string,
+  periodKey: string,
+) {
+  const supabase = await createClient();
+  const user = await requireSession();
+  const [habits, habitLogs, habitsAnalysis] = await Promise.all([
+    getAllHabits(),
+    getHabitLog(),
+    getHabitAnalysis(),
+  ]);
+  const today = new Date().toLocaleDateString("en-CA", {
+    timeZone: user.timezone,
+  });
+
+  const analysisData = createAnalysisData(habits, habitLogs, habitsAnalysis);
+  const payload =
+    type === "weekly"
+      ? createWeeklyAiPayload(analysisData, today)
+      : createDailyAiPayload(analysisData, today);
+
+  const { data: existingInsight, error } = await supabase
+    .from("ai_insights")
+    .select("content, created_at")
+    .eq("user_id", user.id)
+    .eq("type", type)
+    .eq("period_key", periodKey)
+    .maybeSingle();
+  if (error) {
+    throw new Error(`Failed to fetch ai insight - ${error.message}`);
+  }
+
+  if (existingInsight) {
+    if (type === "weekly") return existingInsight.content;
+
+    const todayLogs = habitLogs.filter((log) => log.date === today);
+    const latestLogTime =
+      todayLogs.length > 0
+        ? Math.max(...todayLogs.map((log) => new Date(log.logged_at).getTime()))
+        : null;
+
+    const isStale =
+      latestLogTime !== null &&
+      existingInsight &&
+      latestLogTime > new Date(existingInsight.created_at).getTime();
+
+    if (type === "daily" && !isStale) return existingInsight.content;
+  }
+
+  const openai = new OpenAI({
+    apiKey: process.env.NINEROUTER_API_KEY,
+    baseURL: "https://9router-production-d75c.up.railway.app/v1",
+  });
+  const userContext = {
+    name: user.name,
+    currentDate: today,
+    currentPeriod: periodKey,
+  };
+  const completion = await openai.chat.completions.create({
+    model: "nvidia/nvidia/nemotron-3-ultra-550b-a55b",
+    messages: [
+      { role: "system", content: systemPrompt },
+      {
+        role: "user",
+        content: JSON.stringify({
+          context: userContext,
+          habitData: payload,
+        }),
+      },
+    ],
+    temperature: 0.2,
+    max_tokens: 1000,
+    response_format: { type: "json_object" },
+  });
+  const content = completion.choices[0]?.message?.content;
+  if (!content) throw new Error("Ai returned empty content");
+
+  const insight = JSON.parse(content);
+
+  const { error: insertError } = await supabase.from("ai_insights").upsert(
+    {
+      created_at: new Date().toISOString(),
+      user_id: user.id,
+      type: type,
+      period_key: periodKey,
+      content: insight,
+    },
+    { onConflict: "user_id, type, period_key" },
+  );
+  if (insertError && insertError.code !== "23505") {
+    throw new Error(`Failed to fetch ai insight - ${insertError.message}`);
+  }
+  return insight;
 }

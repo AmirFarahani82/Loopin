@@ -1,9 +1,6 @@
-import OpenAI from "openai";
-import { createClient } from "@/utils/supabase/server";
-import { getAllHabits, getHabitLog, requireSession } from "../data/habits";
-import { getHabitAnalysis } from "../data/habitAnalysis";
-import { createAnalysisData } from "./core";
-import { createDailyAiPayload } from "./aiMappers";
+import { requireSession } from "../data/habits";
+import { getOrGenerateInsight } from "./aiMappers";
+
 function createDailyPeriodKey(timezone: string) {
   const now = new Date();
   const dateForamtter = new Intl.DateTimeFormat("en-CA", {
@@ -29,53 +26,9 @@ function createDailyPeriodKey(timezone: string) {
   return `${date}_${periods[bucket]}`;
 }
 export async function getDailyAiInsight() {
-  const supabase = await createClient();
   const user = await requireSession();
-
   const periodKey = createDailyPeriodKey(user.timezone);
   if (!periodKey) return null;
-
-  const [habits, habitLogs, habitsAnalysis] = await Promise.all([
-    getAllHabits(),
-    getHabitLog(),
-    getHabitAnalysis(),
-  ]);
-  const today = new Date().toLocaleDateString("en-CA", {
-    timeZone: user.timezone,
-  });
-
-  const analysisData = createAnalysisData(habits, habitLogs, habitsAnalysis);
-  const payload = createDailyAiPayload(analysisData, today);
-
-  const { data: existingInsight, error } = await supabase
-    .from("ai_insights")
-    .select("content, created_at")
-    .eq("user_id", user.id)
-    .eq("type", "daily")
-    .eq("period_key", periodKey)
-    .maybeSingle();
-  if (error) {
-    throw new Error(`Failed to fetch ai insight - ${error.message}`);
-  }
-  const todayLogs = habitLogs.filter((log) => log.date === today);
-  const latestLogTime =
-    todayLogs.length > 0
-      ? Math.max(...todayLogs.map((log) => new Date(log.logged_at).getTime()))
-      : null;
-
-  const isStale =
-    latestLogTime !== null &&
-    existingInsight &&
-    latestLogTime > new Date(existingInsight.created_at).getTime();
-
-  if (existingInsight && !isStale) {
-    return existingInsight.content;
-  }
-
-  const openai = new OpenAI({
-    apiKey: process.env.NINEROUTER_API_KEY,
-    baseURL: "https://9router-production-d75c.up.railway.app/v1",
-  });
   const systemPrompt = `You are an empathetic, insightful, and data-driven personal habit coach.
 Your task is to analyze the user's daily habit tracking data and provide a personalized daily insight.
 
@@ -97,45 +50,7 @@ JSON RESPONSE SCHEMA:
 "areasToWatch": ["1 to 2 gentle recommendations"],
 "dailyTip": "One actionable tip (Max 25 words)"
 }`;
-  const userContext = {
-    name: user.name,
-    currentDate: today,
-    currentPeriod: periodKey,
-  };
 
-  const completion = await openai.chat.completions.create({
-    model: "nvidia/nvidia/nemotron-3-ultra-550b-a55b",
-    messages: [
-      { role: "system", content: systemPrompt },
-      {
-        role: "user",
-        content: JSON.stringify({
-          context: userContext,
-          habitData: payload,
-        }),
-      },
-    ],
-    temperature: 0.2,
-    max_tokens: 1000,
-    response_format: { type: "json_object" },
-  });
-  const content = completion.choices[0]?.message?.content;
-  if (!content) throw new Error("Ai returned empty content");
-
-  const insight = JSON.parse(content);
-
-  const { error: insertError } = await supabase.from("ai_insights").upsert(
-    {
-      created_at: new Date().toISOString(),
-      user_id: user.id,
-      type: "daily",
-      period_key: periodKey,
-      content: insight,
-    },
-    { onConflict: "user_id, type, period_key" },
-  );
-  if (insertError && insertError.code !== "23505") {
-    throw new Error(`Failed to fetch ai insight - ${insertError.message}`);
-  }
+  const insight = await getOrGenerateInsight("daily", systemPrompt, periodKey);
   return insight;
 }
