@@ -26,7 +26,7 @@ export function useCompleteHabit(habit: Habit, frozenHabitlog?: HabitLog[]) {
       await queryClient.cancelQueries({ queryKey: ["allHabits"] });
       await queryClient.cancelQueries({ queryKey: ["habitLogs"] });
       await queryClient.cancelQueries({ queryKey: ["heatmap"] });
-      await queryClient.cancelQueries({ queryKey: ["ai-dailyAnalysis"] });
+      await queryClient.cancelQueries({ queryKey: ["ai-dailyInsight"] });
       const previousLogs = queryClient.getQueryData(["habitLogs"]);
       const previousHeatmap = queryClient.getQueryData(["heatmap"]);
       const todayStr = new Date().toLocaleDateString("en-CA");
@@ -66,7 +66,7 @@ export function useCompleteHabit(habit: Habit, frozenHabitlog?: HabitLog[]) {
       queryClient.invalidateQueries({ queryKey: ["habits"] });
       queryClient.invalidateQueries({ queryKey: ["habitLogs"] });
       queryClient.invalidateQueries({ queryKey: ["heatmap"] });
-      queryClient.invalidateQueries({ queryKey: ["ai-dailyAnalysis"] });
+      queryClient.invalidateQueries({ queryKey: ["ai-dailyInsight"] });
     },
     onSuccess: () => {
       setValue(null);

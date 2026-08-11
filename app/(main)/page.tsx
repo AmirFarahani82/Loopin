@@ -15,6 +15,7 @@ import {
 } from "@tanstack/react-query";
 import { getHabitAnalysis } from "@/libs/data/habitAnalysis";
 import { getDailyAiInsight } from "@/libs/analytics/dailyAiInsight";
+import { getWeeklyAiInsight } from "@/libs/analytics/weeklyAiInsight";
 
 export default async function Home() {
   const queryClient = new QueryClient();
@@ -40,8 +41,12 @@ export default async function Home() {
       queryFn: getHabitAnalysis,
     }),
     queryClient.prefetchQuery({
-      queryKey: ["ai-dailyAnalysis"],
+      queryKey: ["ai-dailyInsight"],
       queryFn: getDailyAiInsight,
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["ai-weeklyInsight"],
+      queryFn: getWeeklyAiInsight,
     }),
   ]);
 

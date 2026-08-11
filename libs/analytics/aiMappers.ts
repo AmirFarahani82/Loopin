@@ -19,11 +19,20 @@ function getDateBefore(dateStr: string, days: number): string {
   return d.toISOString().split("T")[0];
 }
 
-function summarizeRange(habit: Habit, logs: HabitLog[], dates: string[]) {
+function summarizeRange(
+  habit: Habit,
+  logs: HabitLog[],
+  dates: string[],
+  timezone: string,
+) {
+  const createdDate = new Date(habit.created_at).toLocaleDateString("en-CA", {
+    timeZone: timezone,
+  });
   let scheduled = 0;
   let completed = 0;
   let totalValue = 0;
   dates.forEach((date) => {
+    if (date < createdDate) return;
     if (isScheduledDay(habit.frequency, date)) {
       scheduled++;
       const logDay = logs.find((log) => log.date === date);
@@ -66,6 +75,7 @@ export function createDailyAiPayload(
 export function createWeeklyAiPayload(
   analysisData: HabitAnalysisData[],
   today: string,
+  timezone: string,
 ) {
   const last7Days = Array.from({ length: 7 }, (_, i) =>
     getDateBefore(today, i + 1),
@@ -74,8 +84,8 @@ export function createWeeklyAiPayload(
     getDateBefore(today, i + 8),
   );
   const payload = analysisData.map(({ habit, stats, logs }) => {
-    const currentWeek = summarizeRange(habit, logs, last7Days);
-    const previousWeek = summarizeRange(habit, logs, previous7Days);
+    const currentWeek = summarizeRange(habit, logs, last7Days, timezone);
+    const previousWeek = summarizeRange(habit, logs, previous7Days, timezone);
 
     return {
       habit: habit.name,
@@ -109,7 +119,7 @@ export async function getOrGenerateInsight(
   const analysisData = createAnalysisData(habits, habitLogs, habitsAnalysis);
   const payload =
     type === "weekly"
-      ? createWeeklyAiPayload(analysisData, today)
+      ? createWeeklyAiPayload(analysisData, today, user.timezone)
       : createDailyAiPayload(analysisData, today);
 
   const { data: existingInsight, error } = await supabase
@@ -142,7 +152,7 @@ export async function getOrGenerateInsight(
 
   const openai = new OpenAI({
     apiKey: process.env.NINEROUTER_API_KEY,
-    baseURL: "https://9router-production-d75c.up.railway.app/v1",
+    baseURL: process.env.AI_BASE_URL,
   });
   const userContext = {
     name: user.name,
@@ -150,7 +160,7 @@ export async function getOrGenerateInsight(
     currentPeriod: periodKey,
   };
   const completion = await openai.chat.completions.create({
-    model: "nvidia/nvidia/nemotron-3-ultra-550b-a55b",
+    model: process.env.AI_MODEL!,
     messages: [
       { role: "system", content: systemPrompt },
       {

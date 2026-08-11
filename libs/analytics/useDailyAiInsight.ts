@@ -11,7 +11,7 @@ const fetchDailyAiInsight = async () => {
 
 export function useDailyAiInsight() {
   return useQuery({
-    queryKey: ["ai-dailyAnalysis"],
+    queryKey: ["ai-dailyInsight"],
     queryFn: fetchDailyAiInsight,
   });
 }
