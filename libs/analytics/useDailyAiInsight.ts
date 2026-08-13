@@ -1,6 +1,7 @@
+import { DailyInsight } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
 
-const fetchDailyAiInsight = async () => {
+const fetchDailyAiInsight = async (): Promise<DailyInsight> => {
   const res = await fetch("/api/ai/daily");
   if (!res.ok) {
     const error = await res.json();

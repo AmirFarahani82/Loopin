@@ -1,7 +1,8 @@
+import { WeeklyInsight } from "@/app/types";
 import { requireSession } from "../data/habits";
 import { getOrGenerateInsight } from "./aiMappers";
 
-export async function getWeeklyAiInsight() {
+export async function getWeeklyAiInsight(): Promise<WeeklyInsight> {
   const user = await requireSession();
   const periodKey = new Date().toLocaleDateString("en-CA", {
     timeZone: user.timezone,
@@ -15,32 +16,27 @@ export async function getWeeklyAiInsight() {
     - currentWeek: the most recent completed week
     - previousWeek: the week immediately before it
 
-    GUIDELINES:
-    1. Output Format: Return ONLY a valid JSON object. Do not include markdown or code fences.
-    2. Response Language: English for all JSON text values.
-    3. Tone: Warm, constructive, professional, encouraging, and honest.
-    4. Do not simply repeat raw statistics. Interpret them and explain meaningful patterns.
-    5. Compare currentWeek with previousWeek to identify meaningful improvements, declines, or stable patterns.
-    6. Prioritize the most significant patterns across all habits. Do not mention every habit.
-    7. Highlights should focus on 1–2 strong or improving habits supported by the data.
-    8. AreasToWatch should focus on 1–2 declining, neglected, or consistently weak habits supported by the data.
-    9. Do not call a habit a weakness solely because its success rate is low. Consider its change from the previous week and the available context.
-    10. For count-based habits, use totalValue and unit when useful to describe the actual amount achieved.
-    11. Use currentStreak as evidence of recent consistency, but do not assume it represents the entire week's performance.
-    12. Use overallSuccessRate as historical context, not as a replacement for weekly performance.
-    13. Give one specific and practical recommendation based on the most important pattern. Avoid generic advice such as "stay consistent."
+    RULES:
+    1. Return ONLY a valid JSON object. No markdown or code fences. All JSON text values must be in English.
+    2. Be warm, constructive, professional, encouraging, and honest.
+    3. Compare currentWeek with previousWeek to identify the most meaningful improvements, declines, recoveries, or stable patterns.
+    4. Prioritize meaningful behavioral patterns over raw statistics. Use exact numbers only when they add important context or demonstrate a meaningful change.
+    5. Do not mention every habit. Focus on the 1-2 most significant patterns across the week.
+    6. Combine related habits or achievements into a single observation when they reflect the same underlying pattern. Do not create multiple highlights for the same behavior.
+    7. A highlight or warning must provide interpretation, not merely report statistics, completion status, streaks, or week-over-week differences.
+    8. Only populate areasToWatch when there is a meaningful decline, repeated neglect, or other evidence-based concern. A low success rate alone is not enough. If there is no meaningful concern, return [].
+    9. Treat currentStreak as evidence of recent consistency, not as a summary of the entire week. Treat overallSuccessRate as historical context, not weekly performance.
+    10. For count-based habits, use totalValue and unit when they meaningfully strengthen the insight.
+    11. Give one specific, practical recommendation for the next week based on the most important pattern. Avoid generic advice such as "stay consistent."
+    12. Do not create highlights or warnings merely to fill the allowed slots.
 
     JSON RESPONSE SCHEMA:
     {
-      "greeting": "A short, warm greeting reflecting the week's overall trend (Max 15 words)",
-      "summary": "A concise overview of the most important weekly trend (Max 45 words)",
-      "highlights": [
-        "1 to 2 evidence-based positive insights"
-      ],
-      "areasToWatch": [
-        "1 to 2 evidence-based areas that need attention"
-      ],
-      "weeklyTip": "One specific, actionable recommendation for the next week (Max 25 words)"
+      "greeting": "Short, warm greeting reflecting the week's overall trend (max 15 words)",
+      "summary": "Concise overview of the most important weekly pattern (max 45 words)",
+      "highlights": ["0-2 meaningful positive insights"],
+      "areasToWatch": ["0-2 meaningful areas needing attention"],
+      "weeklyTip": "One specific, actionable recommendation for next week (max 25 words)"
     }`;
 
   const insight = await getOrGenerateInsight("weekly", systemPrompt, periodKey);

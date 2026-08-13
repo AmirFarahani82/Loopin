@@ -65,6 +65,16 @@ export type HabitAnalysisData = {
   logs: HabitLog[];
   habit: Habit;
 };
+export type DailyInsight = {
+  greeting: string;
+  dailyTip: string;
+  summary: string;
+  highlights: string[];
+  areasToWatch: string[] | [];
+};
+export type WeeklyInsight = Omit<DailyInsight, "dailyTip"> & {
+  weeklyTip: string;
+};
 export type SigninForm = {
   email: string;
   password: string;

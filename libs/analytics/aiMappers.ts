@@ -171,8 +171,8 @@ export async function getOrGenerateInsight(
         }),
       },
     ],
-    temperature: 0.2,
-    max_tokens: 1000,
+    temperature: 0.5,
+    max_tokens: 2000,
     response_format: { type: "json_object" },
   });
   const content = completion.choices[0]?.message?.content;
