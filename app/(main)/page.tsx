@@ -49,6 +49,10 @@ export default async function Home() {
       queryKey: ["ai-weeklyInsight"],
       queryFn: getWeeklyAiInsight,
     }),
+    queryClient.prefetchQuery({
+      queryKey: ["chartData"],
+      queryFn: () => getHabitAnalytics(),
+    }),
   ]);
 
   return (
