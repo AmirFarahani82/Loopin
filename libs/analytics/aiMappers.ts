@@ -1,7 +1,7 @@
 import { Frequency, Habit, HabitAnalysisData, HabitLog } from "@/app/types";
 import { createClient } from "@/utils/supabase/server";
 import { getAllHabits, getHabitLog, requireSession } from "../data/habits";
-import { getHabitAnalysis } from "../data/habitAnalysis";
+import { getAiInsightData } from "../data/habitAnalysis";
 import { createAnalysisData } from "./core";
 import OpenAI from "openai";
 function isScheduledDay(frequency: Frequency, dateStr: string): boolean {
@@ -65,8 +65,8 @@ export function createDailyAiPayload(
     return {
       habit: habit.name,
       status: statusToday,
-      Currentstreak: stats?.current_streak ?? 0,
-      successRate: stats?.completion_rate ?? 0,
+      Currentstreak: stats?.currentStreak ?? 0,
+      successRate: stats?.completionRate ?? 0,
     };
   });
   return payload;
@@ -89,10 +89,10 @@ export function createWeeklyAiPayload(
 
     return {
       habit: habit.name,
-      currentStreak: stats?.current_streak ?? 0,
+      currentStreak: stats?.currentStreak ?? 0,
       currentWeek,
       previousWeek,
-      overallSuccessRate: stats?.completion_rate ?? 0,
+      overallSuccessRate: stats?.completionRate ?? 0,
     };
   });
 
@@ -110,7 +110,7 @@ export async function getOrGenerateInsight(
   const [habits, habitLogs, habitsAnalysis] = await Promise.all([
     getAllHabits(),
     getHabitLog(),
-    getHabitAnalysis(),
+    getAiInsightData(),
   ]);
   const today = new Date().toLocaleDateString("en-CA", {
     timeZone: user.timezone,

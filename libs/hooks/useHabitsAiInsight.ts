@@ -7,9 +7,9 @@ const fetchHabitAnalysis = async (): Promise<HabitAnalysis[]> => {
   return res.json();
 };
 
-export function useHabitsAnalysis() {
+export function useHabitsAiInsight() {
   return useQuery({
-    queryKey: ["habitsAnalysis"],
+    queryKey: ["habitInsight"],
     queryFn: fetchHabitAnalysis,
   });
 }

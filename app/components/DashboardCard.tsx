@@ -3,7 +3,7 @@ import { FaFireFlameCurved } from "react-icons/fa6";
 import CardSkeleton from "./CardSkeleton";
 import { useTodayHabits } from "@/libs/hooks/useTodayHabits";
 import { useAllHabits } from "@/libs/hooks/useAllHabits";
-import { useHabitsAnalysis } from "@/libs/hooks/useHabitsAnalysis";
+import { useHabitsAiInsight } from "@/libs/hooks/useHabitsAiInsight";
 
 export default function DashboardCard({ today }: { today: string }) {
   const { todayProgress, isPending: todayPending } = useTodayHabits(today);
@@ -16,15 +16,15 @@ export default function DashboardCard({ today }: { today: string }) {
     error,
   } = useAllHabits();
   const { data: habitsAnalysis = [], isPending: habitsAnalysisPending } =
-    useHabitsAnalysis();
+    useHabitsAiInsight();
 
   const longestStreak = habitsAnalysis.reduce((max, curr) => {
-    return curr.current_streak > max.current_streak ? curr : max;
+    return curr.currentStreak > max.currentStreak ? curr : max;
   }, habitsAnalysis[0]);
   const longestStreakHabit = habits.find(
-    (h) => h.id === longestStreak?.habit_id,
+    (h) => h.id === longestStreak?.habitId,
   );
-  const activeStreak = habitsAnalysis.filter((a) => a.is_active === true);
+  const activeStreak = habitsAnalysis.filter((a) => a.isActive === true);
   const streakCardContent = { ...longestStreak, ...longestStreakHabit };
 
   if (todayPending || allPending || habitsAnalysisPending) {
@@ -57,8 +57,8 @@ export default function DashboardCard({ today }: { today: string }) {
         <span>Longest streak</span>
         <span>
           {streakCardContent.type === "boolean"
-            ? `${streakCardContent.name} ${streakCardContent.current_streak}  ${streakCardContent.current_streak === 1 ? "day" : "days"} streak`
-            : `${streakCardContent.name} ${streakCardContent.total_value} ${streakCardContent.unit} over ${streakCardContent.current_streak} ${streakCardContent.current_streak === 1 ? "day" : "days"} `}
+            ? `${streakCardContent.name} ${streakCardContent.currentStreak}  ${streakCardContent.currentStreak === 1 ? "day" : "days"} streak`
+            : `${streakCardContent.name} ${streakCardContent.totalValue} ${streakCardContent.unit} over ${streakCardContent.currentStreak} ${streakCardContent.currentStreak === 1 ? "day" : "days"} `}
         </span>
       </div>
       <div className="flex flex-col items-center justify-center">

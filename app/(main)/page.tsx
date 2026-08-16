@@ -13,7 +13,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { getHabitAnalysis } from "@/libs/data/habitAnalysis";
+import { getAiInsightData, getHabitAnalytics } from "@/libs/data/habitAnalysis";
 import { getDailyAiInsight } from "@/libs/analytics/dailyAiInsight";
 import { getWeeklyAiInsight } from "@/libs/analytics/weeklyAiInsight";
 
@@ -23,6 +23,7 @@ export default async function Home() {
   const today = new Date().toLocaleDateString("en-CA", {
     timeZone: user.timezone,
   });
+  await getHabitAnalytics();
   await Promise.all([
     queryClient.prefetchQuery({
       queryKey: ["allHabits"],
@@ -37,8 +38,8 @@ export default async function Home() {
       queryFn: getHabitLog,
     }),
     queryClient.prefetchQuery({
-      queryKey: ["habitsAnalysis"],
-      queryFn: getHabitAnalysis,
+      queryKey: ["habitInsight"],
+      queryFn: getAiInsightData,
     }),
     queryClient.prefetchQuery({
       queryKey: ["ai-dailyInsight"],

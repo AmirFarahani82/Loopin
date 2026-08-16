@@ -46,19 +46,19 @@ export type HabitLog = {
 };
 
 export type HabitAnalysis = {
-  habit_id: string;
-  current_streak: number;
-  longest_streak: number;
-  total_value?: number;
-  current_streak_total_value?: number;
-  last_completed_date: string | null;
-  is_active: boolean;
-  freeze_days_used: number;
-  last_log_date: string | null;
-  completion_rate: number;
-  total_scheduled_days: number;
-  total_completed_days: number;
-  missed_days: string[];
+  habitId: string;
+  currentStreak: number;
+  longestStreak: number;
+  totalValue?: number;
+  currentStreakTotalValue?: number;
+  lastCompletedDate: string | null;
+  isActive: boolean;
+  freezeDaysUsed: number;
+  lastLogDate: string | null;
+  completionRate: number;
+  totalScheduledDays: number;
+  totalCompletedDays: number;
+  missedDays: string[];
 };
 export type HabitAnalysisData = {
   stats: HabitAnalysis | undefined;
@@ -75,6 +75,70 @@ export type DailyInsight = {
 export type WeeklyInsight = Omit<DailyInsight, "dailyTip"> & {
   weeklyTip: string;
 };
+export type Weekday = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun";
+
+export interface WeekdayStat {
+  day: Weekday;
+  rate: number;
+}
+
+export interface CountTimeSeriesItem {
+  date: string;
+  value: number;
+  target: number;
+  scheduled: boolean;
+  isCompleted: boolean;
+  normalizedPct: number;
+}
+
+export interface BooleanTimeSeriesItem {
+  date: string;
+  value: null;
+  target: null;
+  scheduled: boolean;
+  isCompleted: boolean | null;
+  normalizedPct: null;
+}
+
+interface BaseHabitStats {
+  habitId: string;
+  habitName: string;
+  rangeCompletionRate: number;
+  rangeMissedDays: number;
+  currentStreak: number;
+  longestStreak: number;
+  weekdayStats: WeekdayStat[];
+}
+
+export interface CountHabitStats extends BaseHabitStats {
+  habitType: "count";
+  targetValue: number;
+  unit: string;
+  rangeTotalValue: number;
+  averageValuePerScheduledDay: number;
+  averageValuePerActiveDay: number;
+  rangeTargetHitRate: number;
+  rangePartialDays: number;
+  rangeMinValue: number;
+  rangeMaxValue: number;
+  timeSeries: CountTimeSeriesItem[];
+}
+
+export interface BooleanHabitStats extends BaseHabitStats {
+  habitType: "boolean";
+  targetValue: null;
+  unit: null;
+  rangeTotalValue: null;
+  averageValuePerScheduledDay: null;
+  averageValuePerActiveDay: null;
+  rangeTargetHitRate: null;
+  rangePartialDays: null;
+  rangeMinValue: null;
+  rangeMaxValue: null;
+  timeSeries: BooleanTimeSeriesItem[];
+}
+export type HabitStats = CountHabitStats | BooleanHabitStats;
+
 export type SigninForm = {
   email: string;
   password: string;

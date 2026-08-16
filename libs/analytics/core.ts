@@ -5,7 +5,7 @@ export function createAnalysisData(
   habitLogs: HabitLog[],
   analysisStats: HabitAnalysis[],
 ) {
-  const statsMap = new Map(analysisStats.map((s) => [s.habit_id, s]));
+  const statsMap = new Map(analysisStats.map((s) => [s.habitId, s]));
   const logsMap: Map<string, HabitLog[]> = new Map();
   habitLogs.forEach((log) => {
     const existingLogs = logsMap.get(log.habit_id) || [];
