@@ -14,7 +14,8 @@ export function AiTips() {
     isPending: weeklyPending,
     error: weeklyError,
   } = useWeeklyInsight();
-
+  if (dailyPending || weeklyPending) return null;
+  if (dailyError || weeklyError) return null;
   return (
     <div>
       <h3 className="text-primary text-xl font-semibold">What I noticed</h3>

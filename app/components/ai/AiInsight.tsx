@@ -2,7 +2,6 @@
 
 import { useDailyAiInsight } from "@/libs/analytics/useDailyAiInsight";
 import { useWeeklyInsight } from "@/libs/analytics/useWeeklyInsight";
-import { MdOutlineTipsAndUpdates } from "react-icons/md";
 import { InsightCard } from "./InsightCard";
 
 export function AiInsight() {
@@ -16,12 +15,26 @@ export function AiInsight() {
     isPending: weeklyPending,
     error: weeklyError,
   } = useWeeklyInsight();
-
   if (dailyPending || weeklyPending) {
-    return <p>Loading AI insight</p>;
+    return (
+      <div className="bg-cart-bg border-br shadow-cart grid h-52 place-items-center rounded-lg border *:text-slate-200">
+        <p>AI insights are loading, please wait.</p>
+      </div>
+    );
   }
-  if (dailyError || weeklyError) {
-    return <p>error</p>;
+
+  if (dailyError) {
+    return (
+      <div className="bg-cart-bg border-br shadow-cart grid h-52 place-items-center rounded-lg border *:text-red-400">
+        <p>{dailyError.message}</p>
+      </div>
+    );
+  } else if (weeklyError) {
+    return (
+      <div className="bg-cart-bg border-br shadow-cart grid h-52 place-items-center rounded-lg border *:text-red-400">
+        <p>{weeklyError.message}</p>
+      </div>
+    );
   }
   return (
     <div className="space-y-4">
