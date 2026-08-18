@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const daysBack = Number(searchParams.get("daysBack")) ?? 30;
+  const daysBack = searchParams.get("daysBack") ?? "30";
   try {
     const chartData = await getHabitAnalytics(daysBack);
     return NextResponse.json(chartData);

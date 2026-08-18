@@ -33,7 +33,7 @@ export async function getAiInsightData() {
   if (error) throw new Error(`Failed to fetch Habits data - ${error.message}`);
   return convertKeysToCamelCase(data);
 }
-export async function getHabitAnalytics(daysBack: number = 30) {
+export async function getHabitAnalytics(daysBack: string = "30") {
   const supabase = await createClient();
   const user = await requireSession();
   const today = new Date().toLocaleDateString("en-CA", {
