@@ -1,4 +1,6 @@
 import { AiSection } from "@/app/components/ai/AiSection";
+import { ChartSection } from "@/app/components/chart/ChartSection";
+import { HabitHistorySection } from "@/app/components/habit-history/HabitHistorySection";
 
 export default function AnalysisPage() {
   return (
@@ -9,10 +11,9 @@ export default function AnalysisPage() {
           A closer look at the patterns behind your progress.
         </h3>
       </div>
-
-      {/*AI INSIGHTS*/}
       <AiSection />
-      {/*CHARTS*/}
+      <ChartSection />
+      <HabitHistorySection />
     </div>
   );
 }
