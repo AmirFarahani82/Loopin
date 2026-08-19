@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { ModalContext } from "../context/ModalContext";
-import { HabitFormValues } from "@/app/components/HabitFormModal/types";
+import { HabitFormValues } from "@/app/components/habit-form/types";
 export type ModalType =
   | { type: "add" }
   | { type: "edit"; id: string; data: HabitFormValues }

@@ -3,8 +3,7 @@
 import { useHabitsChartData } from "@/libs/hooks/useHabitsChartData";
 import { LineChart } from "./LineChart";
 import { useEffect, useState } from "react";
-import { HabitSelector } from "./HabitSelector";
-import { HabitStats } from "@/app/types";
+import { HabitSelector } from "../HabitSelector";
 
 export function ChartSection() {
   const [daysBack, setDaysBack] = useState("30");

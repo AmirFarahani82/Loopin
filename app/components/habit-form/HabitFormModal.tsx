@@ -2,7 +2,7 @@
 
 import { FormProvider } from "react-hook-form";
 import { useModal } from "@/libs/context/ModalContext";
-import Input from "../Input";
+import Input from "../ui/Input";
 import { categories, habitTypes } from "./constants";
 import { FrequencySelector } from "./FrequencySelector";
 import { useHabitFormModal } from "./useHabitFormModal";

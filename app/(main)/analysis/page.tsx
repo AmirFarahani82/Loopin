@@ -1,6 +1,6 @@
-import { AiSection } from "@/app/components/ai/AiSection";
-import { ChartSection } from "@/app/components/chart/ChartSection";
-import { HabitHistorySection } from "@/app/components/habit-history/HabitHistorySection";
+import { AiSection } from "@/app/components/analysis/ai/AiSection";
+import { ChartSection } from "@/app/components/analysis/chart/ChartSection";
+import { HabitHistorySection } from "@/app/components/analysis/habit-history/HabitHistorySection";
 
 export default function AnalysisPage() {
   return (

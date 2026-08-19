@@ -1,6 +1,6 @@
-import DashboardCard from "@/app/components/DashboardCard";
-import HabitHeatMap from "@/app/components/HabitHeatMap";
-import HabitsPanel from "@/app/components/HabitsPanel";
+import DashboardCard from "@/app/components/dashboard/DashboardCard";
+import HabitHeatMap from "@/app/components/dashboard/HabitHeatMap";
+import HabitsPanel from "@/app/components/habits-panel/HabitsPanel";
 import {
   getAllHabits,
   getHabitLog,

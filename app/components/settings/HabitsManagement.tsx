@@ -3,12 +3,12 @@
 import { useAllHabits } from "@/libs/hooks/useAllHabits";
 import { FiEdit2 } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import CardSkeleton from "./CardSkeleton";
+import CardSkeleton from "../ui/CardSkeleton";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteHabit } from "@/libs/actions/habits";
 import { useState } from "react";
 import { useModal } from "@/libs/context/ModalContext";
-import { habitToFormValue } from "./HabitFormModal/types";
+import { habitToFormValue } from "../habit-form/types";
 import Link from "next/link";
 
 export function HabitsManagement() {

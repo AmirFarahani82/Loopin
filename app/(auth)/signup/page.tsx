@@ -1,5 +1,5 @@
 "use client";
-import Input from "@/app/components/Input";
+import Input from "@/app/components/ui/Input";
 import { SignupForm } from "@/app/types";
 import { signUp, type AuthState } from "@/libs/actions/auth";
 import Link from "next/link";

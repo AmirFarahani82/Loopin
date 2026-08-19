@@ -1,8 +1,8 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import HeatMap, { HeatMapValue } from "@uiw/react-heat-map";
-import { CustomTooltip } from "./ui/Tooltip";
-import CardSkeleton from "./CardSkeleton";
+import { CustomTooltip } from "../ui/Tooltip";
+import CardSkeleton from "../ui/CardSkeleton";
 
 const fetchHeatmap = async (
   startDate: string,

@@ -1,6 +1,6 @@
 "use client";
 import { FaFireFlameCurved } from "react-icons/fa6";
-import CardSkeleton from "./CardSkeleton";
+import CardSkeleton from "../ui/CardSkeleton";
 import { useTodayHabits } from "@/libs/hooks/useTodayHabits";
 import { useAllHabits } from "@/libs/hooks/useAllHabits";
 import { useHabitsAiInsight } from "@/libs/hooks/useHabitsAiInsight";

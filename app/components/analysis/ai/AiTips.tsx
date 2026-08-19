@@ -1,6 +1,6 @@
 "use client";
-import { useDailyAiInsight } from "@/libs/analytics/useDailyAiInsight";
-import { useWeeklyInsight } from "@/libs/analytics/useWeeklyInsight";
+import { useDailyAiInsight } from "@/libs/hooks/useDailyAiInsight";
+import { useWeeklyInsight } from "@/libs/hooks/useWeeklyInsight";
 import { TipsCard } from "./TipsCard";
 
 export function AiTips() {

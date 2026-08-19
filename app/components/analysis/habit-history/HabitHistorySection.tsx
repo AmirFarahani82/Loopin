@@ -1,9 +1,9 @@
 "use client";
 import { useHabitsChartData } from "@/libs/hooks/useHabitsChartData";
-import { HabitSelector } from "../chart/HabitSelector";
+import { HabitSelector } from "../HabitSelector";
 import { useState } from "react";
 import { HabitHistory } from "./HabitHistory";
-import { HabitHistorySkeleton } from "../HabitHistorySkeleton";
+import { HabitHistorySkeleton } from "./HabitHistorySkeleton";
 
 export function HabitHistorySection() {
   const { data = [], isFetching, isError, error } = useHabitsChartData("30");

@@ -1,6 +1,6 @@
 "use client";
-import HabitCard from "@/app/components/HabitCard";
-import CardSkeleton from "./CardSkeleton";
+import HabitCard from "./HabitCard";
+import CardSkeleton from "../ui/CardSkeleton";
 import { useTodayHabits } from "@/libs/hooks/useTodayHabits";
 import { useModal } from "@/libs/context/ModalContext";
 

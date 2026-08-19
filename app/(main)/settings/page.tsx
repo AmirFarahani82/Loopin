@@ -1,5 +1,5 @@
-import { AccountSection } from "@/app/components/AccountSection";
-import { HabitsManagement } from "@/app/components/HabitsManagement";
+import { AccountSection } from "@/app/components/settings/AccountSection";
+import { HabitsManagement } from "@/app/components/settings/HabitsManagement";
 import { requireSession } from "@/libs/data/habits";
 
 export default async function SettingsPage() {
