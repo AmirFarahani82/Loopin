@@ -1,5 +1,6 @@
 import { Habit, HabitLog } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "../query/keys";
 
 const fetchHabits = async (): Promise<Habit[]> => {
   const res = await fetch("/api/habits");
@@ -17,11 +18,11 @@ export function useTodayHabits(today: string) {
     isPending: habitsPending,
     error: habitsError,
   } = useQuery({
-    queryKey: ["habits"],
+    queryKey: queryKeys.habits,
     queryFn: fetchHabits,
   });
   const { data: habitLogs = [], isPending: habitLogsPending } = useQuery({
-    queryKey: ["habitLogs"],
+    queryKey: queryKeys.habitLogs,
     queryFn: fetchHabitLog,
   });
 

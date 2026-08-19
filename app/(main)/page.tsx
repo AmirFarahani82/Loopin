@@ -1,21 +1,17 @@
 import DashboardCard from "@/app/components/dashboard/DashboardCard";
 import HabitHeatMap from "@/app/components/dashboard/HabitHeatMap";
 import HabitsPanel from "@/app/components/habits-panel/HabitsPanel";
-import {
-  getAllHabits,
-  getHabitLog,
-  getHabits,
-  requireSession,
-} from "@/libs/data/habits";
+import { requireSession } from "@/libs/data/habits";
 import { TooltipProvider } from "@/app/components/ui/TooltipConfig";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { getAiInsightData, getHabitAnalytics } from "@/libs/data/habitAnalysis";
-import { getDailyAiInsight } from "@/libs/analytics/dailyAiInsight";
-import { getWeeklyAiInsight } from "@/libs/analytics/weeklyAiInsight";
+import {
+  prefetchAnalysisData,
+  prefetchDashboardData,
+} from "@/libs/data/prefetch";
 
 export default async function Home() {
   const queryClient = new QueryClient();
@@ -23,36 +19,10 @@ export default async function Home() {
   const today = new Date().toLocaleDateString("en-CA", {
     timeZone: user.timezone,
   });
-  await getHabitAnalytics();
+
   await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: ["allHabits"],
-      queryFn: getAllHabits,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ["habits"],
-      queryFn: getHabits,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ["habitLogs"],
-      queryFn: getHabitLog,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ["habitInsight"],
-      queryFn: getAiInsightData,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ["ai-dailyInsight"],
-      queryFn: getDailyAiInsight,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ["ai-weeklyInsight"],
-      queryFn: getWeeklyAiInsight,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ["chartData"],
-      queryFn: () => getHabitAnalytics(),
-    }),
+    prefetchDashboardData(queryClient),
+    prefetchAnalysisData(queryClient),
   ]);
 
   return (

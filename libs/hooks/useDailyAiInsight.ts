@@ -1,5 +1,6 @@
 import { DailyInsight } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "../query/keys";
 
 const fetchDailyAiInsight = async (): Promise<DailyInsight> => {
   const res = await fetch("/api/ai/daily");
@@ -12,7 +13,7 @@ const fetchDailyAiInsight = async (): Promise<DailyInsight> => {
 
 export function useDailyAiInsight() {
   return useQuery({
-    queryKey: ["ai-dailyInsight"],
+    queryKey: queryKeys.aiDailyInsight,
     queryFn: fetchDailyAiInsight,
   });
 }

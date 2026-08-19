@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useModal } from "@/libs/context/ModalContext";
 import { habitToFormValue } from "../habit-form/types";
 import Link from "next/link";
+import { queryKeys } from "@/libs/query/keys";
 
 export function HabitsManagement() {
   const [deletingId, setDeletingId] = useState("");
@@ -24,8 +25,8 @@ export function HabitsManagement() {
   } = useMutation({
     mutationFn: deleteHabit,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["habits"] });
-      queryClient.invalidateQueries({ queryKey: ["allHabits"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.habits });
+      queryClient.invalidateQueries({ queryKey: queryKeys.allHabits });
     },
   });
 

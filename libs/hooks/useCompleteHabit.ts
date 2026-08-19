@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { completeHabit } from "../actions/habits";
 import { Habit, HabitLog } from "@/app/types";
+import { queryKeys } from "../query/keys";
 
 export function useCompleteHabit(habit: Habit, frozenHabitlog?: HabitLog[]) {
   const [value, setValue] = useState<null | number>(null);
@@ -22,16 +23,16 @@ export function useCompleteHabit(habit: Habit, frozenHabitlog?: HabitLog[]) {
       value?: number;
     }) => completeHabit(habitId, status, value),
     onMutate: async (newLog) => {
-      await queryClient.cancelQueries({ queryKey: ["habits"] });
-      await queryClient.cancelQueries({ queryKey: ["allHabits"] });
-      await queryClient.cancelQueries({ queryKey: ["habitLogs"] });
-      await queryClient.cancelQueries({ queryKey: ["heatmap"] });
-      await queryClient.cancelQueries({ queryKey: ["ai-dailyInsight"] });
-      const previousLogs = queryClient.getQueryData(["habitLogs"]);
-      const previousHeatmap = queryClient.getQueryData(["heatmap"]);
+      await queryClient.cancelQueries({ queryKey: queryKeys.habits });
+      await queryClient.cancelQueries({ queryKey: queryKeys.allHabits });
+      await queryClient.cancelQueries({ queryKey: queryKeys.habitLogs });
+      await queryClient.cancelQueries({ queryKey: queryKeys.heatmap });
+      await queryClient.cancelQueries({ queryKey: queryKeys.aiDailyInsight });
+      const previousLogs = queryClient.getQueryData(queryKeys.habitLogs);
+      const previousHeatmap = queryClient.getQueryData(queryKeys.heatmap);
       const todayStr = new Date().toLocaleDateString("en-CA");
 
-      queryClient.setQueryData(["habitLogs"], (old: any) => {
+      queryClient.setQueryData(queryKeys.habitLogs, (old: any) => {
         if (!old) return old;
         const optimisticEntry = {
           id: `temp-${Date.now()}`,
@@ -56,17 +57,17 @@ export function useCompleteHabit(habit: Habit, frozenHabitlog?: HabitLog[]) {
     onError: (err, newLog, context) => {
       console.error("Mutation failed, rolling back...", err);
       if (context?.previousLogs) {
-        queryClient.setQueryData(["habitLogs"], context.previousLogs);
+        queryClient.setQueryData(queryKeys.habitLogs, context.previousLogs);
       }
       if (context?.previousHeatmap) {
-        queryClient.setQueryData(["heatmap"], context.previousHeatmap);
+        queryClient.setQueryData(queryKeys.heatmap, context.previousHeatmap);
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["habits"] });
-      queryClient.invalidateQueries({ queryKey: ["habitLogs"] });
-      queryClient.invalidateQueries({ queryKey: ["heatmap"] });
-      queryClient.invalidateQueries({ queryKey: ["ai-dailyInsight"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.habits });
+      queryClient.invalidateQueries({ queryKey: queryKeys.habitLogs });
+      queryClient.invalidateQueries({ queryKey: queryKeys.heatmap });
+      queryClient.invalidateQueries({ queryKey: queryKeys.aiDailyInsight });
     },
     onSuccess: () => {
       setValue(null);

@@ -1,5 +1,6 @@
 import { HabitStats } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "../query/keys";
 
 const fetchHabitsChartData = async (
   daysBack: string,
@@ -10,7 +11,7 @@ const fetchHabitsChartData = async (
 };
 export function useHabitsChartData(daysBack: string = "30") {
   return useQuery({
-    queryKey: ["chartData", daysBack],
+    queryKey: [queryKeys.chartData, daysBack],
     queryFn: () => fetchHabitsChartData(daysBack),
     placeholderData: [] as HabitStats[],
   });

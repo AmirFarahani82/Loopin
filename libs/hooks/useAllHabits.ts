@@ -1,5 +1,6 @@
 import { Habit, HabitLog } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "../query/keys";
 
 const fetchAllHabits = async (): Promise<Habit[]> => {
   const res = await fetch("/api/all-habits");
@@ -19,7 +20,7 @@ export function useAllHabits() {
     error: habitError,
     isError: isHabitsError,
   } = useQuery({
-    queryKey: ["allHabits"],
+    queryKey: queryKeys.allHabits,
     queryFn: fetchAllHabits,
   });
   const {
@@ -28,7 +29,7 @@ export function useAllHabits() {
     error: habitLogError,
     isError: isHabitLogsError,
   } = useQuery({
-    queryKey: ["habitLogs"],
+    queryKey: queryKeys.habitLogs,
     queryFn: fetchHabitLog,
   });
 

@@ -1,5 +1,6 @@
 import { HabitAnalysis } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
+import { queryKeys } from "../query/keys";
 
 const fetchHabitAnalysis = async (): Promise<HabitAnalysis[]> => {
   const res = await fetch("/api/habits-analysis");
@@ -9,7 +10,7 @@ const fetchHabitAnalysis = async (): Promise<HabitAnalysis[]> => {
 
 export function useHabitsAiInsight() {
   return useQuery({
-    queryKey: ["habitInsight"],
+    queryKey: queryKeys.habitInsight,
     queryFn: fetchHabitAnalysis,
   });
 }

@@ -5,6 +5,7 @@ import { useModal } from "@/libs/context/ModalContext";
 import { addHabit, editHabit } from "@/libs/actions/habits";
 import { HabitFormValues } from "./types";
 import { formDefaults } from "./constants";
+import { queryKeys } from "@/libs/query/keys";
 
 export function useHabitFormModal() {
   const { modal, closeModal } = useModal();
@@ -18,8 +19,8 @@ export function useHabitFormModal() {
       return addHabit(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["habits"] });
-      queryClient.invalidateQueries({ queryKey: ["allHabits"] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.habits });
+      queryClient.invalidateQueries({ queryKey: queryKeys.allHabits });
       reset();
       closeModal();
     },
