@@ -30,7 +30,7 @@ export function EditableField({
   if (!isEditing) {
     return (
       <div className="mb-4 flex items-center gap-3">
-        <p className="truncate text-lg text-slate-200">{value}</p>
+        <p className="text-subtitle truncate text-slate-200">{value}</p>
         <FiEdit2
           className="text-secondary size-4 shrink-0 cursor-pointer"
           onClick={() => setIsEditing(true)}

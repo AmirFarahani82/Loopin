@@ -36,13 +36,13 @@ export default function HabitHeatMap({ today }: { today: string }) {
   } else if (error) {
     return (
       <div className="flex w-full items-center justify-center p-14">
-        <p className="text-lg text-red-400">{error.message}</p>
+        <p className="text-subtitle text-red-400">{error.message}</p>
       </div>
     );
   }
   return (
     <div className="flex w-full flex-col gap-10 p-4">
-      <h3 className="text-primary text-xl font-bold">
+      <h3 className="text-primary text-section-title font-bold">
         Your Yearly Performance
       </h3>
       <div className="w-full min-w-0 overflow-x-auto">

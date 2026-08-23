@@ -4,7 +4,7 @@ import { BarChart } from "./BarChart";
 export function HabitHistory({ habit }: { habit: HabitStats }) {
   return (
     <div>
-      <h4 className="text-lg text-slate-200">
+      <h4 className="text-subtitle text-slate-200">
         Here is a brief stats for {habit.habitName}
       </h4>
       <div className="mt-4 grid grid-cols-3 gap-3">
@@ -45,7 +45,7 @@ function Stat({ label, value }: { label: string; value: string }) {
     <div className="rounded-lg border border-slate-700/70 bg-slate-900/40 p-3">
       <p className="text-xs font-medium text-slate-400">{label}</p>
 
-      <p className="mt-1 text-lg font-semibold text-slate-100">{value}</p>
+      <p className="text-subtitle mt-1 font-semibold text-slate-100">{value}</p>
     </div>
   );
 }

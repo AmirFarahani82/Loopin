@@ -18,7 +18,9 @@ export function AiTips() {
   if (dailyError || weeklyError) return null;
   return (
     <div>
-      <h3 className="text-primary text-xl font-semibold">What I noticed</h3>
+      <h3 className="text-primary text-section-title font-semibold">
+        What I noticed
+      </h3>
       <div className="grid grid-cols-2 gap-2">
         {dailyInsight?.highlights.map((daily) => (
           <TipsCard key={daily} type="highlight" content={daily} />

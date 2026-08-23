@@ -17,7 +17,7 @@ export function InsightCard({
       <h4 className="text-secondary-hover!">
         {period === "today" ? "Daily insight" : "Weekly insight"}
       </h4>
-      {greeting && <p className="text-lg font-medium">{greeting}</p>}
+      {greeting && <p className="text-subtitle font-medium">{greeting}</p>}
       <p className="text-slate-400!">{summary}</p>
       <div className="flex gap-1 rounded-md border border-purple-500/20 bg-purple-500/10 p-1.5 text-purple-300">
         <MdOutlineTipsAndUpdates className="size-5 shrink-0" />

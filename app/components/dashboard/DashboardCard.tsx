@@ -36,16 +36,18 @@ export default function DashboardCard({ today }: { today: string }) {
       </div>
     );
   } else if (isError) {
-    return <p className="text-center text-lg text-red-400">{error?.message}</p>;
+    return (
+      <p className="text-subtitle text-center text-red-400">{error?.message}</p>
+    );
   } else if (habits.length === 0) {
     return (
-      <p className="text-center text-lg text-slate-200">
+      <p className="text-subtitle text-center text-slate-200">
         Add habit to see your progress here.
       </p>
     );
   } else if (habitLog.length === 0) {
     return (
-      <p className="text-center text-lg text-slate-200">
+      <p className="text-subtitle text-center text-slate-200">
         No habit activity yet. Start tracking today!
       </p>
     );

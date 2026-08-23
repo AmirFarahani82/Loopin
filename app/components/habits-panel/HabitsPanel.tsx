@@ -27,7 +27,7 @@ export default function HabitsPanel({ today }: { today: string }) {
   } else if (habitsError) {
     return (
       <aside className="border-br flex h-screen items-center justify-center border-l">
-        <p className="text-center text-lg text-red-400">
+        <p className="text-subtitle text-center text-red-400">
           {habitsError.message}
         </p>
       </aside>
@@ -35,12 +35,12 @@ export default function HabitsPanel({ today }: { today: string }) {
   } else if (!habits.length) {
     return (
       <aside className="border-br flex h-screen flex-col items-center justify-center gap-4 border-l">
-        <p className="text-center text-lg text-slate-200">
+        <p className="text-subtitle text-center text-slate-200">
           You have no habit yet.
         </p>
         <button
           onClick={() => openModal({ type: "add" })}
-          className="text-secondary hover:text-secondary-hover w-fit transform self-center text-lg duration-200 hover:cursor-pointer"
+          className="text-secondary hover:text-secondary-hover text-subtitle w-fit transform self-center duration-200 hover:cursor-pointer"
         >
           + Add habit
         </button>
@@ -53,14 +53,14 @@ export default function HabitsPanel({ today }: { today: string }) {
       <div className="flex max-h-2/3 flex-col gap-4">
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl text-slate-200">Active Habits</h3>
+            <h3 className="text-section-title text-slate-200">Active Habits</h3>
             <span className="text-slate-200">
               {todayDoneHabits?.length} / {habits?.length}
             </span>
           </div>
           <button
             onClick={() => openModal({ type: "add" })}
-            className="text-secondary hover:text-secondary-hover w-fit transform self-center text-lg duration-200 hover:cursor-pointer"
+            className="text-secondary hover:text-secondary-hover text-subtitle w-fit transform self-center duration-200 hover:cursor-pointer"
           >
             + Add habit
           </button>
@@ -69,7 +69,7 @@ export default function HabitsPanel({ today }: { today: string }) {
           {habits.length > 0 &&
             !todayActiveHabits?.length &&
             !todayFrozenHabits?.length && (
-              <p className="py-8 text-center text-lg text-slate-200">
+              <p className="text-subtitle py-8 text-center text-slate-200">
                 You have done all your habits
               </p>
             )}
@@ -90,9 +90,9 @@ export default function HabitsPanel({ today }: { today: string }) {
 
       {/*// DONE habits*/}
       <div className="flex flex-col gap-4">
-        <h3 className="text-xl text-slate-200">Completed Habits</h3>
+        <h3 className="text-section-title text-slate-200">Completed Habits</h3>
         {!todayDoneHabits?.length && (
-          <p className="py-8 text-center text-lg text-slate-200">
+          <p className="text-subtitle py-8 text-center text-slate-200">
             You have not done any habit yet
           </p>
         )}

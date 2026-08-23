@@ -50,7 +50,7 @@ export function ChartSection() {
   }
   return (
     <section className="bg-tertiary mt-10 space-y-3 rounded-xl border border-slate-700 p-4">
-      <h3 className="text-primary text-xl font-semibold">Charts</h3>
+      <h3 className="text-primary text-section-title font-semibold">Charts</h3>
       <div className="flex items-center justify-between">
         <div>
           {data

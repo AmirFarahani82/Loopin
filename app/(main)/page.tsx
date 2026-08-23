@@ -32,10 +32,10 @@ export default async function Home() {
           <div className="shadow-main bg-tertiary space-y-6 rounded-xl border border-slate-700 p-4">
             <div className="flex items-center justify-between space-y-2">
               <div>
-                <h2 className="text-3xl font-bold text-slate-200 capitalize">
+                <h2 className="text-heading font-bold text-slate-200 capitalize">
                   Welcome Back, {user?.name}
                 </h2>
-                <h3 className="text-lg text-slate-400">
+                <h3 className="text-subtitle text-slate-400">
                   Here's your productivity overview for today.
                 </h3>
               </div>

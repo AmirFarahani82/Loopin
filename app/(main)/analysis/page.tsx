@@ -12,12 +12,12 @@ export default async function AnalysisPage() {
     return (
       <div className="flex min-h-dvh flex-col p-8">
         <div className="">
-          <h2 className="text-3xl font-bold text-slate-200">Analysis</h2>
-          <h3 className="text-lg text-slate-400">
+          <h2 className="text-heading font-bold text-slate-200">Analysis</h2>
+          <h3 className="text-subtitle text-slate-400">
             A closer look at the patterns behind your progress.
           </h3>
         </div>
-        <div className="flex h-full flex-1 items-center justify-center gap-1 text-lg">
+        <div className="text-subtitle flex h-full flex-1 items-center justify-center gap-1">
           <span className="text-slate-200">You have no habits yet!</span>{" "}
           <Link
             href="/dashboard"
@@ -33,12 +33,12 @@ export default async function AnalysisPage() {
     return (
       <div className="flex min-h-dvh flex-col p-8">
         <div className="">
-          <h2 className="text-3xl font-bold text-slate-200">Analysis</h2>
-          <h3 className="text-lg text-slate-400">
+          <h2 className="text-heading font-bold text-slate-200">Analysis</h2>
+          <h3 className="text-subtitle text-slate-400">
             A closer look at the patterns behind your progress.
           </h3>
         </div>
-        <div className="flex h-full flex-1 items-center justify-center gap-1 text-lg">
+        <div className="text-subtitle flex h-full flex-1 items-center justify-center gap-1">
           <span className="text-slate-200">You have no activity yet! </span>{" "}
           <Link
             href="/dashboard"
@@ -54,8 +54,8 @@ export default async function AnalysisPage() {
   return (
     <div className="p-8">
       <div>
-        <h2 className="text-3xl font-bold text-slate-200">Analysis</h2>
-        <h3 className="text-lg text-slate-400">
+        <h2 className="text-heading font-bold text-slate-200">Analysis</h2>
+        <h3 className="text-subtitle text-slate-400">
           A closer look at the patterns behind your progress.
         </h3>
       </div>

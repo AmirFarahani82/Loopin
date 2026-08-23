@@ -38,7 +38,7 @@ export function AiInsight() {
   }
   return (
     <div className="space-y-4">
-      <h3 className="text-primary text-xl font-semibold">
+      <h3 className="text-primary text-section-title font-semibold">
         {dailyInsight?.greeting}
       </h3>
       <InsightCard

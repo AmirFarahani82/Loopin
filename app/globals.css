@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "../node_modules/tw-animate-css/dist/tw-animate.css";
 @theme {
+  --text-heading: clamp(1.5rem, 1.356rem + 0.577vw, 1.875rem);
+  --text-section-title: clamp(1.125rem, 1.077rem + 0.192vw, 1.25rem);
+  --text-subtitle: clamp(1rem, 0.952rem + 0.192vw, 1.125rem);
   --color-primary: #8b5cf6;
   --color-secondary: #c4b5fd;
   --color-secondary-hover: #a78bfa;

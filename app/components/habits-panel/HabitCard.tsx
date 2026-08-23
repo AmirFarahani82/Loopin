@@ -46,7 +46,9 @@ export default function HabitCard({
     <div
       className={`w-[90%] space-y-4 self-center rounded-xl border p-4 ${cardStyles}`}
     >
-      <h3 className={`text-lg font-semibold ${titleStyles}`}>{habit?.name}</h3>
+      <h3 className={`text-subtitle font-semibold ${titleStyles}`}>
+        {habit?.name}
+      </h3>
 
       {habit?.type === "count" && !isDone && !isFrozen && (
         <>

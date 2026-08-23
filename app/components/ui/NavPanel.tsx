@@ -28,7 +28,7 @@ export default function NavPanel() {
 
   return (
     <aside className="border-br flex flex-col gap-4 border-r px-3 py-4">
-      <h1 className="text-primary text-3xl font-bold">Loopin</h1>
+      <h1 className="text-primary text-heading font-bold">Loopin</h1>
       <nav>
         <ul>
           {navList.map((nav) => (
