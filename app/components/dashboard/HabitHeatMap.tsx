@@ -42,9 +42,9 @@ export default function HabitHeatMap({ today }: { today: string }) {
   }
   return (
     <div className="flex w-full flex-col gap-10 p-4">
-      <h2 className="text-xl font-bold text-slate-200">
+      <h3 className="text-primary text-xl font-bold">
         Your Yearly Performance
-      </h2>
+      </h3>
       <div className="w-full min-w-0 overflow-x-auto">
         <HeatMap
           key={`${twelveMonthsAgo}-${today}-${data.length}`}

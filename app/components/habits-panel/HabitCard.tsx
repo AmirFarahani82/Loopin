@@ -1,6 +1,6 @@
 "use client";
 import { FaCheckCircle } from "react-icons/fa";
-import { Habit, HabitLog } from "../types";
+import { Habit, HabitLog } from "@/app/types";
 import { useCompleteHabit } from "@/libs/hooks/useCompleteHabit";
 
 export default function HabitCard({

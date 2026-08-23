@@ -53,7 +53,7 @@ export default function HabitsPanel({ today }: { today: string }) {
       <div className="flex max-h-2/3 flex-col gap-4">
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl text-slate-200">Active Habits</h2>
+            <h3 className="text-xl text-slate-200">Active Habits</h3>
             <span className="text-slate-200">
               {todayDoneHabits?.length} / {habits?.length}
             </span>
@@ -90,7 +90,7 @@ export default function HabitsPanel({ today }: { today: string }) {
 
       {/*// DONE habits*/}
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl text-slate-200">Completed Habits</h2>
+        <h3 className="text-xl text-slate-200">Completed Habits</h3>
         {!todayDoneHabits?.length && (
           <p className="py-8 text-center text-lg text-slate-200">
             You have not done any habit yet

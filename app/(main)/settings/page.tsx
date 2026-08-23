@@ -16,13 +16,13 @@ export default async function SettingsPage() {
       </div>
       <div className="*:bg-tertiary mt-10 grid grid-cols-[1fr_300px] items-start gap-15 *:rounded-xl *:border *:border-slate-700 *:p-4">
         <div>
-          <h3 className="text-secondary-active text-2xl font-semibold">
+          <h3 className="text-secondary-active text-xl font-semibold">
             Habit Management
           </h3>
           <HabitsManagement />
         </div>
         <div className="">
-          <h3 className="text-secondary-active text-2xl font-semibold">
+          <h3 className="text-secondary-active text-xl font-semibold">
             Account Section
           </h3>
           <AccountSection session={session} />

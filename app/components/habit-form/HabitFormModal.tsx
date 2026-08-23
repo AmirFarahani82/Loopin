@@ -27,9 +27,9 @@ export default function HabitFormModal() {
         onClick={(e: React.MouseEvent) => e.stopPropagation()}
         className="bg-cart-bg border-br shadow-main fixed top-1/2 left-1/2 flex max-h-[600px] w-[700px] -translate-1/2 flex-col items-center overflow-y-scroll rounded-xl border p-4 *:text-slate-200"
       >
-        <h2 className="mb-15 text-2xl font-bold">
+        <h3 className="mb-15 text-xl font-bold">
           {modal.type === "add" ? "Add new habit" : "Edit habit"}
-        </h2>
+        </h3>
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(onSubmit)}
