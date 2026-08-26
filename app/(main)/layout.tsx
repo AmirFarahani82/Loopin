@@ -10,7 +10,7 @@ export default function MainLayout({
 }) {
   return (
     <Providers>
-      <main className="grid h-screen grid-cols-[15%_minmax(0,2fr)]">
+      <main className="relative h-screen md:static md:grid md:grid-cols-[180px_minmax(0,2fr)]">
         <NavPanel />
         <div className="relative min-w-0 overflow-y-auto">
           {children}
