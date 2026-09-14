@@ -27,7 +27,7 @@ export default async function Home() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="relative grid grid-cols-[minmax(0,2fr)_1fr]">
+      <div className="relative lg:grid lg:grid-cols-[minmax(0,2fr)_1fr]">
         <div className="flex flex-col gap-15 p-4">
           <div className="shadow-main bg-tertiary space-y-6 rounded-xl border border-slate-700 p-4">
             <div className="flex items-center justify-between space-y-2">
@@ -35,11 +35,11 @@ export default async function Home() {
                 <h2 className="text-heading font-bold text-slate-200 capitalize">
                   Welcome Back, {user?.name}
                 </h2>
-                <h3 className="text-subtitle text-slate-400">
+                <h3 className="text-subtitle text-slate-400 text-wrap">
                   Here's your productivity overview for today.
                 </h3>
               </div>
-              <div className="text-slate-300">{today}</div>
+              <span className="text-slate-300 text-base text-nowrap self-start sm:self-center">{today}</span>
             </div>
 
             <div>

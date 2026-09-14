@@ -1,5 +1,4 @@
 "use client";
-import { FaFireFlameCurved } from "react-icons/fa6";
 import CardSkeleton from "../ui/CardSkeleton";
 import { useTodayHabits } from "@/libs/hooks/useTodayHabits";
 import { useAllHabits } from "@/libs/hooks/useAllHabits";
@@ -53,9 +52,8 @@ export default function DashboardCard({ today }: { today: string }) {
     );
   }
   return (
-    <div className="*:shadow-cart *:bg-cart-bg grid grid-cols-3 gap-x-4 *:h-25 *:rounded-lg **:text-slate-200">
+    <div className="*:shadow-cart *:bg-cart-bg grid grid-cols-2 gap-4 *:text-center *:h-25 *:rounded-lg **:text-slate-200 sm:grid-cols-3">
       <div className="relative flex flex-col items-center justify-center">
-        <FaFireFlameCurved className="absolute right-0 bottom-1 size-20 opacity-30 *:text-orange-500!" />
         <span>Longest streak</span>
         <span>
           {streakCardContent.type === "boolean"
@@ -67,7 +65,7 @@ export default function DashboardCard({ today }: { today: string }) {
         <span>Active streaks</span>
         {activeStreak?.length} / {habits?.length}
       </div>
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center col-span-2 sm:col-span-1">
         <span>Today completion rate</span>
         <span>{todayProgress}%</span>
         <div className="h-2.5 w-4/5 rounded-2xl bg-slate-800">

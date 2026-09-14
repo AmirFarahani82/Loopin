@@ -151,7 +151,7 @@ export async function getOrGenerateInsight(
   }
 
   const openai = new OpenAI({
-    apiKey: process.env.NINEROUTER_API_KEY,
+    apiKey: process.env.AI_API_KEY,
     baseURL: process.env.AI_BASE_URL,
   });
   const userContext = {
