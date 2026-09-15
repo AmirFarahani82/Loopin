@@ -61,6 +61,7 @@ export default function HabitHeatMap({ today }: { today: string }) {
           className="w-207 max-w-none min-w-207"
           rectSize={12}
           width={830}
+          panelColors={{ 0: "#0d0a12", 1: "#3a1987", 3: "#683bd0", 5: "#9e79f4", }}
           rectRender={(props, dayData) => {
             const count = dayData.count || 0;
             const formattedDate = dayData.date;

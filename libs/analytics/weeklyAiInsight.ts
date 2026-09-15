@@ -1,5 +1,5 @@
 import { WeeklyInsight } from "@/app/types";
-import { requireSession } from "../data/habits";
+import { requireSession } from "../actions/auth";
 import { getOrGenerateInsight } from "./aiMappers";
 
 export async function getWeeklyAiInsight(): Promise<WeeklyInsight> {

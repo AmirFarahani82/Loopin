@@ -1,16 +1,7 @@
 import { Habit, HabitLog } from "@/app/types";
 import { createClient } from "../../utils/supabase/server";
-import { getSession } from "../actions/auth";
+import { requireSession } from "../actions/auth";
 
-export async function requireSession() {
-  const session = await getSession();
-
-  if (!session?.id) {
-    throw new Error("No active session (user not authenticated)");
-  }
-
-  return session;
-}
 export async function getAllHabits() {
   const supabase = await createClient();
   const session = await requireSession();
@@ -18,7 +9,7 @@ export async function getAllHabits() {
   const { data, error } = await supabase
     .from("habits")
     .select("*")
-    .eq("user_id", session?.id);
+    .eq("user_id", session.id);
 
   if (error) {
     throw new Error(`Failed to fetch habits — ${error.message}`, {
@@ -33,13 +24,13 @@ export async function getHabits(): Promise<Habit[]> {
   const session = await requireSession();
   const today = new Date().toLocaleDateString("en-CA", {
     weekday: "short",
-    timeZone: session?.timezone,
+    timeZone: session.timezone,
   });
 
   const { data: habits, error: habitsError } = await supabase
     .from("habits")
     .select("*")
-    .eq("user_id", session?.id)
+    .eq("user_id", session.id)
     .or(
       `frequency->>type.eq.daily,and(frequency->>type.eq.custom,frequency->days.cs.["${today}"])`,
     );
@@ -58,7 +49,7 @@ export async function getHabitLog(): Promise<HabitLog[]> {
   const { data: habitLogs, error } = await supabase
     .from("habit_logs")
     .select("*")
-    .eq("user_id", session?.id);
+    .eq("user_id", session.id);
 
   if (error) {
     throw new Error(`Failed to fetch habit logs - ${error.message}`, {

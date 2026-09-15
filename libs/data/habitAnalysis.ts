@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { requireSession } from "./habits";
+import { requireSession } from "../actions/auth";
 function snakeToCamel(str: string): string {
   return str.replace(/_([a-zA-Z0-9])/g, (_, match) => match.toUpperCase());
 }

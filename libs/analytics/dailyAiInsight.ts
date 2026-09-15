@@ -1,5 +1,5 @@
 import { DailyInsight } from "@/app/types";
-import { requireSession } from "../data/habits";
+import { requireSession } from "../actions/auth";
 import { getOrGenerateInsight } from "./aiMappers";
 
 function createDailyPeriodKey(timezone: string) {

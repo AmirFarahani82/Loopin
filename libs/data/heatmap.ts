@@ -1,5 +1,5 @@
 import { createClient } from "../../utils/supabase/server";
-import { requireSession } from "./habits";
+import { requireSession } from "../actions/auth";
 
 export async function getHeatmapData(startDate: string, endDate: string) {
   const supabase = await createClient();

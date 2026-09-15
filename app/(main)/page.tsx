@@ -1,7 +1,7 @@
 import DashboardCard from "@/app/components/dashboard/DashboardCard";
 import HabitHeatMap from "@/app/components/dashboard/HabitHeatMap";
 import HabitsPanel from "@/app/components/habits-panel/HabitsPanel";
-import { requireSession } from "@/libs/data/habits";
+import { requireSession } from "@/libs/actions/auth";
 import { TooltipProvider } from "@/app/components/ui/TooltipConfig";
 import {
   dehydrate,
@@ -33,7 +33,7 @@ export default async function Home() {
             <div className="flex items-center justify-between space-y-2">
               <div>
                 <h2 className="text-heading font-bold text-slate-200 capitalize">
-                  Welcome Back, {user?.name}
+                  Welcome Back, {user.name}
                 </h2>
                 <h3 className="text-subtitle text-slate-400 text-wrap">
                   Here's your productivity overview for today.

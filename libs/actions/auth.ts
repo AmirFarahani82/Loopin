@@ -51,14 +51,14 @@ export async function signIn(
   redirect("/dashboard");
 }
 
-export async function getSession() {
+export async function requireSession() {
   const supabase = await createClient();
   const {
     data: { user },
     error,
   } = await supabase.auth.getUser();
 
-  if (error || !user) return null;
+  if (error || !user) throw new Error("No active session (user not authenticated)");
 
   return {
     id: user.id,

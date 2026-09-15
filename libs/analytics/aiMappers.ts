@@ -1,9 +1,10 @@
 import { Frequency, Habit, HabitAnalysisData, HabitLog } from "@/app/types";
 import { createClient } from "@/utils/supabase/server";
-import { getAllHabits, getHabitLog, requireSession } from "../data/habits";
+import { getAllHabits, getHabitLog } from "../data/habits";
 import { getAiInsightData } from "../data/habitAnalysis";
 import { createAnalysisData } from "./core";
 import OpenAI from "openai";
+import { requireSession } from "../actions/auth";
 function isScheduledDay(frequency: Frequency, dateStr: string): boolean {
   if (frequency.type === "daily") return true;
 

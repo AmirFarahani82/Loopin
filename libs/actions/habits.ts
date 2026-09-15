@@ -2,13 +2,12 @@
 
 import { HabitFormValues } from "@/app/components/habit-form/types";
 import { createClient } from "@/utils/supabase/server";
-import { getSession } from "./auth";
 import { revalidatePath } from "next/cache";
-import { requireSession } from "../data/habits";
+import { requireSession } from "./auth";
 
 export async function addHabit(data: HabitFormValues) {
   const supabase = await createClient();
-  const session = await getSession();
+  const session = await requireSession();
   const frequency =
     data.frequency === "daily"
       ? { type: "daily" }
@@ -17,7 +16,7 @@ export async function addHabit(data: HabitFormValues) {
   const { error } = await supabase.from("habits").insert([
     {
       name: data.name.trim(),
-      user_id: session?.id,
+      user_id: session.id,
       category: data.category,
       frequency,
       type: data.type,
@@ -35,10 +34,10 @@ export async function completeHabit(
   value?: number,
 ) {
   const supabase = await createClient();
-  const session = await getSession();
+  const session = await requireSession();
 
   const date = new Date().toLocaleDateString("en-CA", {
-    timeZone: session?.timezone,
+    timeZone: session.timezone,
   });
   const logged_at = new Date().toISOString();
 
@@ -46,7 +45,7 @@ export async function completeHabit(
     const { error } = await supabase.from("habit_logs").upsert(
       [
         {
-          user_id: session?.id,
+          user_id: session.id,
           habit_id: habitId,
           status,
           value: value ? value : null,

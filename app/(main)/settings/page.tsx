@@ -1,6 +1,6 @@
 import { AccountSection } from "@/app/components/settings/AccountSection";
 import { HabitsManagement } from "@/app/components/settings/HabitsManagement";
-import { requireSession } from "@/libs/data/habits";
+import { requireSession } from "@/libs/actions/auth";
 
 export default async function SettingsPage() {
   const session = await requireSession();
