@@ -5,7 +5,7 @@ import { requireSession } from "@/libs/data/habits";
 export default async function SettingsPage() {
   const session = await requireSession();
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div>
         <h2 className="text-heading font-bold text-slate-200 capitalize">
           Settings
@@ -14,7 +14,7 @@ export default async function SettingsPage() {
           Configure your habit engineering environment and account.
         </h3>
       </div>
-      <div className="*:bg-tertiary mt-10 grid grid-cols-[1fr_300px] items-start gap-15 *:rounded-xl *:border *:border-slate-700 *:p-4">
+      <div className="*:bg-tertiary mt-10 flex flex-col-reverse lg:grid lg:grid-cols-[1fr_300px] gap-4 lg:gap-15 *:rounded-xl *:border *:border-slate-700 *:p-4 lg:items-start">
         <div>
           <h3 className="text-secondary-active text-section-title font-semibold">
             Habit Management

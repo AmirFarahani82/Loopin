@@ -57,11 +57,11 @@ export function HabitsManagement() {
   }
 
   return (
-    <ul className="mx-auto mt-4 w-4/5 space-y-4">
+    <ul className="mx-auto mt-4 space-y-4 sm:w-4/5 ">
       {habits.map((habit) => (
         <li
           key={habit.id}
-          className="bg-cart-bg border-br flex items-center justify-between rounded-md border p-4 shadow-[0_6px_12px_-4px_rgb(0_0_0/0.25),0_2px_4px_-2px_rgb(15_23_42/0.18),inset_0_1px_0_rgb(255_255_255/0.04)]"
+          className="bg-cart-bg border-br flex items-center justify-between rounded-md border p-2 shadow-[0_6px_12px_-4px_rgb(0_0_0/0.25),0_2px_4px_-2px_rgb(15_23_42/0.18),inset_0_1px_0_rgb(255_255_255/0.04)] sm:p-4"
         >
           <div className="space-y-2 capitalize">
             <p className="text-secondary">{habit.name}</p>
