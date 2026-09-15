@@ -13,7 +13,12 @@ const fetchHeatmap = async (
   if (!res.ok) throw new Error("Failed to fetch heatmap data");
   return res.json();
 };
-
+const getCellColor = (count: number): string => {
+  if (count === 0) return "#0d0a12";
+  if (count <= 2) return "#3a1987";
+  if (count <= 4) return "#683bd0";
+  return "#9e79f4";
+};
 export default function HabitHeatMap({ today }: { today: string }) {
   const twelveMonthsAgo = new Date(today);
   twelveMonthsAgo.setFullYear(twelveMonthsAgo.getFullYear() - 1);
@@ -56,19 +61,13 @@ export default function HabitHeatMap({ today }: { today: string }) {
           className="w-207 max-w-none min-w-207"
           rectSize={12}
           width={830}
-          panelColors={{
-            0: "#0d0a12",
-            1: "#3a1987",
-            3: "#683bd0",
-            5: "#9e79f4",
-          }}
           rectRender={(props, dayData) => {
             const count = dayData.count || 0;
             const formattedDate = dayData.date;
             const { key, ...rectProps } = props;
             return (
               <CustomTooltip
-                key={props.key}
+                key={formattedDate}
                 side="top"
                 content={
                   <span>
@@ -77,7 +76,7 @@ export default function HabitHeatMap({ today }: { today: string }) {
                   </span>
                 }
               >
-                <rect key={key} {...rectProps} />
+                <rect key={formattedDate}  {...rectProps} fill={getCellColor(count)} />
               </CustomTooltip>
             );
           }}
