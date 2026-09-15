@@ -52,7 +52,7 @@ export default async function AnalysisPage() {
     );
   }
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div>
         <h2 className="text-heading font-bold text-slate-200">Analysis</h2>
         <h3 className="text-subtitle text-slate-400">

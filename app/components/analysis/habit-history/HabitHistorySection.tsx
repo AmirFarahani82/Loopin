@@ -20,7 +20,7 @@ export function HabitHistorySection() {
         <HabitHistorySkeleton />
       ) : (
         <>
-          <div className="flex w-4/5 flex-wrap gap-y-1">
+          <div className="flex w-full overflow-x-auto gap-1 *:shrink-0 lg:w-4/5 lg:flex-wrap">
             {data.map((habit) => (
               <HabitSelector
                 key={habit.habitId}

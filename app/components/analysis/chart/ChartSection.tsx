@@ -51,8 +51,8 @@ export function ChartSection() {
   return (
     <section className="bg-tertiary mt-10 space-y-3 rounded-xl border border-slate-700 p-4">
       <h3 className="text-primary text-section-title font-semibold">Charts</h3>
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
+        <div className="flex self-start flex-wrap gap-1">
           {data
             .filter((habit) => habit.habitType === "count")
             .map((habit) => (
@@ -65,22 +65,19 @@ export function ChartSection() {
               />
             ))}
         </div>
-        <div className="relative grid grid-cols-2 items-center gap-2 rounded-md border border-slate-700 p-1">
+        <div className="grid grid-cols-[80px_80px] self-start gap-1.5 rounded-md border border-slate-700 p-1 sm:items-center">
           <button
-            className="w-[80px] text-center text-slate-200 hover:cursor-pointer"
+            className={`w-[80px] transform duration-200 text-center text-slate-200 hover:cursor-pointer ${daysBack === '30' ? 'bg-slate-400/20 rounded-md' : ''}`}
             onClick={() => setDaysBack("30")}
           >
             Monthly
           </button>
           <button
-            className="w-[80px] text-center text-slate-200 hover:cursor-pointer"
+            className={`w-[80px] transform duration-200 text-center text-slate-200 hover:cursor-pointer ${daysBack === '7' ? 'bg-slate-400/20 rounded-md' : ''}`}
             onClick={() => setDaysBack("7")}
           >
             Weekly
           </button>
-          <div
-            className={`absolute top-0 left-1 h-full w-[calc(50%-4px)] transform rounded-md bg-slate-400/20 duration-400 ${daysBack === "30" ? "translate-x-0" : "translate-x-full"}`}
-          ></div>
         </div>
       </div>
       <LineChart isFetching={isFetching} lineChartData={lineChartData} />

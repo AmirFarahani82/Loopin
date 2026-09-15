@@ -21,7 +21,7 @@ export function AiTips() {
       <h3 className="text-primary text-section-title font-semibold">
         What I noticed
       </h3>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-2">
         {dailyInsight?.highlights.map((daily) => (
           <TipsCard key={daily} type="highlight" content={daily} />
         ))}
@@ -29,7 +29,7 @@ export function AiTips() {
           <TipsCard key={weekly} type="highlight" content={weekly} />
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-2">
         {dailyInsight?.areasToWatch.map((daily) => (
           <TipsCard key={daily} type="warning" content={daily} />
         ))}

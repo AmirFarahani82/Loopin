@@ -7,7 +7,7 @@ export function HabitHistory({ habit }: { habit: HabitStats }) {
       <h4 className="text-subtitle text-slate-200">
         Here is a brief stats for {habit.habitName}
       </h4>
-      <div className="mt-4 grid grid-cols-3 gap-3">
+      <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3">
         <Stat label="Current streak" value={`${habit.currentStreak} days`} />
         <Stat label="Longest streak" value={`${habit.longestStreak} days`} />
         <Stat
