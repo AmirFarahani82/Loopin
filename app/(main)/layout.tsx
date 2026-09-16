@@ -12,7 +12,7 @@ export default function MainLayout({
     <Providers>
       <main className="relative h-screen md:static md:grid md:grid-cols-[180px_minmax(0,2fr)]">
         <NavPanel />
-        <div className="relative min-w-0 overflow-y-auto">
+        <div className="relative min-w-0 pb-16 overflow-y-auto">
           {children}
           <HabitFormModal />
         </div>
