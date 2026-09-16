@@ -20,20 +20,20 @@ export default function HabitFormModal() {
 
   return (
     <div
-      className="fixed inset-0 h-full w-full bg-black/50 backdrop-blur-md"
+      className="fixed inset-0 h-full w-full bg-black/50 backdrop-blur-md z-10"
       onClick={closeModal}
     >
       <div
         onClick={(e: React.MouseEvent) => e.stopPropagation()}
-        className="bg-cart-bg border-br shadow-main fixed top-1/2 left-1/2 flex max-h-[600px] w-[700px] -translate-1/2 flex-col items-center overflow-y-scroll rounded-xl border p-4 *:text-slate-200"
+        className="bg-cart-bg border-br shadow-main fixed top-1/2 left-1/2 flex max-h-[600px] w-3/4  -translate-1/2 flex-col items-center overflow-y-scroll rounded-xl border p-4 *:text-slate-200 md:w-[700px]"
       >
-        <h3 className="text-section-title mb-15 font-bold">
+        <h3 className="text-section-title mb-10 font-bold md:mb-15">
           {modal.type === "add" ? "Add new habit" : "Edit habit"}
         </h3>
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(onSubmit)}
-            className="flex w-4/5 flex-col gap-4"
+            className="flex w-full flex-col gap-4 md:w-4/5"
           >
             <label htmlFor="name">
               Habit name <span className="text-red-500">*</span>

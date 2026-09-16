@@ -41,7 +41,7 @@ export function FrequencySelector({ isPending }: { isPending: boolean }) {
         <option value="daily">Daily</option>
         <option value="custom">Custom</option>
       </select>
-      <div className="flex gap-4">
+      <div className="flex gap-4 w-full overflow-x-auto">
         {frequency === "custom" &&
           weekDays.map((day) => {
             const isSelected = selectedDays.includes(day);
