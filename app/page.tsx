@@ -1,7 +1,11 @@
+import Container from "./components/landing-page/Container";
+import Header from "./components/landing-page/Header";
+
 export default function LandingPage() {
   return (
-    <div>
-      <h1>Hello, Loopin</h1>
-    </div>
+    <>
+      <Header />
+      <main></main>
+    </>
   );
 }
