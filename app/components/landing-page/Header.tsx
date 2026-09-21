@@ -10,7 +10,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-10 flex h-18 w-full items-center border-b border-b-slate-700 bg-slate-900/75 font-semibold text-slate-200 backdrop-blur-md">
+    <header className="sticky top-0 z-10 flex h-16 w-full items-center border-b border-b-slate-700 bg-slate-900/75 font-semibold text-slate-200 backdrop-blur-md md:h-18">
       <div
         className={`${isOpen ? "block" : "hidden"} absolute inset-0 h-screen w-screen bg-slate-900/30 backdrop-blur-xs md:hidden`}
         onClick={() => setIsOpen(false)}

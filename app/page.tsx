@@ -1,11 +1,13 @@
-import Container from "./components/landing-page/Container";
 import Header from "./components/landing-page/Header";
+import Hero from "./components/landing-page/Hero";
 
 export default function LandingPage() {
   return (
     <>
       <Header />
-      <main></main>
+      <main>
+        <Hero />
+      </main>
     </>
   );
 }
