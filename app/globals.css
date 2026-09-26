@@ -34,3 +34,16 @@ body {
     0 0 8px 0px rgba(245, 158, 11, 0.25),
     0 0 10px 0px rgba(245, 158, 11, 0.12);
 }
+
+#nprogress .bar {
+  background: #8b5cf6 !important;
+  box-shadow:
+    0 0 4px #8b5cf6,
+    0 0 8px rgba(139, 92, 246, 0.5) !important;
+  border-radius: 0 9999px 9999px 0;
+}
+#nprogress .peg {
+  box-shadow:
+    0 0 6px #c4b5fd,
+    0 0 10px #8b5cf6 !important;
+}
