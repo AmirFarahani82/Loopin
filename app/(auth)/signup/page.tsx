@@ -67,7 +67,7 @@ export default function Signup() {
         </button>
       </form>
       <Link href="/signin" className="underline underline-offset-2">
-        Already have an acount? Sign in
+        Already have an account? Sign in
       </Link>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 import Input from "@/app/components/ui/Input";
 import { SigninForm } from "@/app/types";
-import { signIn, signUp, type AuthState } from "@/libs/actions/auth";
+import { signIn, type AuthState } from "@/libs/actions/auth";
 import Link from "next/link";
 import { useActionState } from "react";
 import { useForm } from "react-hook-form";
@@ -17,7 +17,7 @@ export default function Signin() {
   return (
     <div className="bg-cart-bg shadow-main border-br flex w-100 flex-col items-center justify-center gap-5 rounded-xl border px-4 py-15 **:text-slate-200">
       <h2>Signin</h2>
-      <p>Welcome back, Sign in to your acount</p>
+      <p>Welcome back, Sign in to your account</p>
       <form
         action={formAction}
         onSubmit={async (e) => {
@@ -55,7 +55,7 @@ export default function Signin() {
         </button>
       </form>
       <Link href="/signup" className="underline underline-offset-2">
-        Don't have an acount? Sign up
+        Don't have an account? Sign up
       </Link>
     </div>
   );

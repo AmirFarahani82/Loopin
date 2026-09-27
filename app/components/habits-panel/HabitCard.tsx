@@ -114,7 +114,7 @@ export default function HabitCard({
             : isFrozen
               ? "Frozen"
               : isPending
-                ? "Submiting..."
+                ? "Submitting..."
                 : "Complete"}
         </span>
       </button>

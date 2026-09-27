@@ -60,7 +60,7 @@ export async function completeHabit(
   } catch (err) {
     if (err instanceof Error)
       throw new Error(
-        `Unexpected error while compeleting habit - ${err.message}`,
+        `Unexpected error while completing habit - ${err.message}`,
       );
   }
 }
