@@ -33,7 +33,7 @@ export async function prefetchAnalysisData(queryClient: QueryClient) {
       queryFn: getDailyAiInsight,
     }),
     queryClient.prefetchQuery({
-      queryKey: ["ai-weeklyInsight"],
+      queryKey: queryKeys.aiWeeklyInsight,
       queryFn: getWeeklyAiInsight,
     }),
     queryClient.prefetchQuery({

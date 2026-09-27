@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import HeatMap, { HeatMapValue } from "@uiw/react-heat-map";
 import { CustomTooltip } from "../ui/Tooltip";
 import CardSkeleton from "../ui/CardSkeleton";
+import { queryKeys } from "@/libs/query/keys";
 
 const fetchHeatmap = async (
   startDate: string,
@@ -28,7 +29,7 @@ export default function HabitHeatMap({ today }: { today: string }) {
     isPending,
     error,
   } = useQuery({
-    queryKey: ["heatmap", twelveMonthsAgoStr, today],
+    queryKey: [queryKeys.heatmap, twelveMonthsAgoStr, today],
     queryFn: () => fetchHeatmap(twelveMonthsAgoStr, today),
   });
 
@@ -61,7 +62,12 @@ export default function HabitHeatMap({ today }: { today: string }) {
           className="w-207 max-w-none min-w-207"
           rectSize={12}
           width={830}
-          panelColors={{ 0: "#0d0a12", 1: "#3a1987", 3: "#683bd0", 5: "#9e79f4", }}
+          panelColors={{
+            0: "#0d0a12",
+            1: "#3a1987",
+            3: "#683bd0",
+            5: "#9e79f4",
+          }}
           rectRender={(props, dayData) => {
             const count = dayData.count || 0;
             const formattedDate = dayData.date;
@@ -77,7 +83,11 @@ export default function HabitHeatMap({ today }: { today: string }) {
                   </span>
                 }
               >
-                <rect key={formattedDate}  {...rectProps} fill={getCellColor(count)} />
+                <rect
+                  key={formattedDate}
+                  {...rectProps}
+                  fill={getCellColor(count)}
+                />
               </CustomTooltip>
             );
           }}
