@@ -2,11 +2,13 @@
 import { useDailyAiInsight } from "@/libs/hooks/useDailyAiInsight";
 import { useWeeklyInsight } from "@/libs/hooks/useWeeklyInsight";
 import { TipsCard } from "./TipsCard";
+import InsightUpdating from "./InsightUpdating";
 
 export function AiTips() {
   const {
     data: dailyInsight,
     isPending: dailyPending,
+    isRefetching,
     error: dailyError,
   } = useDailyAiInsight();
   const {
@@ -18,6 +20,7 @@ export function AiTips() {
   if (dailyError || weeklyError) return null;
   return (
     <div>
+      {isRefetching && <InsightUpdating type="tip" />}
       <h3 className="text-primary text-section-title font-semibold">
         What I noticed
       </h3>

@@ -3,11 +3,13 @@
 import { useDailyAiInsight } from "@/libs/hooks/useDailyAiInsight";
 import { useWeeklyInsight } from "@/libs/hooks/useWeeklyInsight";
 import { InsightCard } from "./InsightCard";
+import InsightUpdating from "./InsightUpdating";
 
 export function AiInsight() {
   const {
     data: dailyInsight,
     isPending: dailyPending,
+    isRefetching,
     error: dailyError,
   } = useDailyAiInsight();
   const {
@@ -38,6 +40,7 @@ export function AiInsight() {
   }
   return (
     <div className="space-y-4">
+      {isRefetching && <InsightUpdating type="insight" />}
       <h3 className="text-primary text-section-title font-semibold">
         {dailyInsight?.greeting}
       </h3>
