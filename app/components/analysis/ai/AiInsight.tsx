@@ -4,6 +4,7 @@ import { useDailyAiInsight } from "@/libs/hooks/useDailyAiInsight";
 import { useWeeklyInsight } from "@/libs/hooks/useWeeklyInsight";
 import { InsightCard } from "./InsightCard";
 import InsightUpdating from "./InsightUpdating";
+import InsightSkeleton from "./InsightSkeleton";
 
 export function AiInsight() {
   const {
@@ -18,11 +19,7 @@ export function AiInsight() {
     error: weeklyError,
   } = useWeeklyInsight();
   if (dailyPending || weeklyPending) {
-    return (
-      <div className="bg-cart-bg border-br shadow-cart grid h-52 place-items-center rounded-lg border *:text-slate-200">
-        <p>AI insights are loading, please wait.</p>
-      </div>
-    );
+    return <InsightSkeleton />;
   }
 
   if (dailyError) {
