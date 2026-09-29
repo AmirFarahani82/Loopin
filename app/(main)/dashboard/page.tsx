@@ -35,11 +35,13 @@ export default async function Home() {
                 <h2 className="text-heading font-bold text-slate-200 capitalize">
                   Welcome Back, {user.name}
                 </h2>
-                <h3 className="text-subtitle text-slate-400 text-wrap">
+                <h3 className="text-subtitle text-wrap text-slate-400">
                   Here's your productivity overview for today.
                 </h3>
               </div>
-              <span className="text-slate-300 text-base text-nowrap self-start sm:self-center">{today}</span>
+              <span className="self-start text-base text-nowrap text-slate-300 sm:self-center">
+                {today}
+              </span>
             </div>
 
             <div>

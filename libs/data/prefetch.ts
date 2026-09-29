@@ -25,18 +25,6 @@ export async function prefetchDashboardData(queryClient: QueryClient) {
 export async function prefetchAnalysisData(queryClient: QueryClient) {
   return Promise.all([
     queryClient.prefetchQuery({
-      queryKey: queryKeys.habitInsight,
-      queryFn: getAiInsightData,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.aiDailyInsight,
-      queryFn: getDailyAiInsight,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: queryKeys.aiWeeklyInsight,
-      queryFn: getWeeklyAiInsight,
-    }),
-    queryClient.prefetchQuery({
       queryKey: queryKeys.chartData,
       queryFn: () => getHabitAnalytics(),
     }),

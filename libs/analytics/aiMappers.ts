@@ -108,20 +108,6 @@ export async function getOrGenerateInsight(
 ) {
   const supabase = await createClient();
   const user = await requireSession();
-  const [habits, habitLogs, habitsAnalysis] = await Promise.all([
-    getAllHabits(),
-    getHabitLog(),
-    getAiInsightData(),
-  ]);
-  const today = new Date().toLocaleDateString("en-CA", {
-    timeZone: user.timezone,
-  });
-
-  const analysisData = createAnalysisData(habits, habitLogs, habitsAnalysis);
-  const payload =
-    type === "weekly"
-      ? createWeeklyAiPayload(analysisData, today, user.timezone)
-      : createDailyAiPayload(analysisData, today);
 
   const { data: existingInsight, error } = await supabase
     .from("ai_insights")
@@ -137,19 +123,37 @@ export async function getOrGenerateInsight(
   if (existingInsight) {
     if (type === "weekly") return existingInsight.content;
 
-    const todayLogs = habitLogs.filter((log) => log.date === today);
-    const latestLogTime =
-      todayLogs.length > 0
-        ? Math.max(...todayLogs.map((log) => new Date(log.logged_at).getTime()))
-        : null;
+    const { data: latestLog, error: latestLogError } = await supabase
+      .from("habit_logs")
+      .select("logged_at")
+      .eq("user_id", user.id)
+      .order("logged_at", { ascending: false })
+      .limit(1)
+      .maybeSingle<{ logged_at: string }>();
+    if (latestLogError)
+      throw new Error(`Failed to fetch log - ${latestLogError.message}`);
 
-    const isStale =
-      latestLogTime !== null &&
-      existingInsight &&
-      latestLogTime > new Date(existingInsight.created_at).getTime();
-
-    if (type === "daily" && !isStale) return existingInsight.content;
+    const latestLogTime = latestLog
+      ? new Date(latestLog.logged_at).getTime()
+      : 0;
+    const insightTime = new Date(existingInsight.created_at).getTime();
+    const isStale = latestLogTime > insightTime;
+    if (!isStale) return existingInsight.content;
   }
+  const today = new Date().toLocaleDateString("en-CA", {
+    timeZone: user.timezone,
+  });
+  const [habits, habitLogs, habitsAnalysis] = await Promise.all([
+    getAllHabits(),
+    getHabitLog(),
+    getAiInsightData(),
+  ]);
+
+  const analysisData = createAnalysisData(habits, habitLogs, habitsAnalysis);
+  const payload =
+    type === "weekly"
+      ? createWeeklyAiPayload(analysisData, today, user.timezone)
+      : createDailyAiPayload(analysisData, today);
 
   const openai = new OpenAI({
     apiKey: process.env.AI_API_KEY,
