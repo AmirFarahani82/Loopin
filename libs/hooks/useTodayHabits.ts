@@ -1,17 +1,13 @@
 import { Habit, HabitLog } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "../query/keys";
+import { fetcher } from "@/utils/fetcher";
 
-const fetchHabits = async (): Promise<Habit[]> => {
-  const res = await fetch("/api/habits");
-  if (!res.ok) throw new Error("Failed to fetch habits");
-  return res.json();
-};
-const fetchHabitLog = async (): Promise<HabitLog[]> => {
-  const res = await fetch("/api/habit-logs");
-  if (!res.ok) throw new Error("Failed to fetch habit logs");
-  return res.json();
-};
+const fetchHabits = () =>
+  fetcher<Habit[]>("/api/habits", "Failed to fetch habits");
+const fetchHabitLogs = () =>
+  fetcher<HabitLog[]>("/api/habit-logs", "Failed to load habit logs");
+
 export function useTodayHabits(today: string) {
   const {
     data: habits = [],
@@ -23,7 +19,7 @@ export function useTodayHabits(today: string) {
   });
   const { data: habitLogs = [], isPending: habitLogsPending } = useQuery({
     queryKey: queryKeys.habitLogs,
-    queryFn: fetchHabitLog,
+    queryFn: fetchHabitLogs,
   });
 
   const todayLogs = (habitLogs || [])?.filter((log) => log.date === today);

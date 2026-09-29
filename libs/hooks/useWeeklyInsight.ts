@@ -1,13 +1,11 @@
 import { WeeklyInsight } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "../query/keys";
+import { fetcher } from "@/utils/fetcher";
 
-const fetchWeeklyInsight = async (): Promise<WeeklyInsight> => {
-  const res = await fetch("/api/ai/weekly");
-  if (!res.ok) throw new Error("Failed to fetch weekly insight.");
+const fetchWeeklyInsight = () =>
+  fetcher<WeeklyInsight>("/api/ai/weekly", "Failed to load weekly insight");
 
-  return res.json();
-};
 export function useWeeklyInsight() {
   return useQuery({
     queryKey: queryKeys.aiWeeklyInsight,

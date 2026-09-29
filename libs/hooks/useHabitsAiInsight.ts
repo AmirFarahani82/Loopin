@@ -1,12 +1,13 @@
 import { HabitAnalysis } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "../query/keys";
+import { fetcher } from "@/utils/fetcher";
 
-const fetchHabitAnalysis = async (): Promise<HabitAnalysis[]> => {
-  const res = await fetch("/api/habits-analysis");
-  if (!res.ok) throw new Error("Failed to fetch streak data");
-  return res.json();
-};
+const fetchHabitAnalysis = () =>
+  fetcher<HabitAnalysis[]>(
+    "/api/habits-analysis",
+    "Failed to load streak data",
+  );
 
 export function useHabitsAiInsight() {
   return useQuery({

@@ -1,17 +1,12 @@
 import { Habit, HabitLog } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "../query/keys";
+import { fetcher } from "@/utils/fetcher";
 
-const fetchAllHabits = async (): Promise<Habit[]> => {
-  const res = await fetch("/api/all-habits");
-  if (!res.ok) throw new Error("Failed to fetch habits");
-  return res.json();
-};
-const fetchHabitLog = async (): Promise<HabitLog[]> => {
-  const res = await fetch("/api/habit-logs");
-  if (!res.ok) throw new Error("Failed to fetch habit logs");
-  return res.json();
-};
+const fetchAllHabits = () =>
+  fetcher<Habit[]>("/api/all-habits", "Failed to load habits");
+const fetchHabitLog = () =>
+  fetcher<HabitLog[]>("/api/habit-logs", "Failed to load habit logs");
 
 export function useAllHabits() {
   const {

@@ -1,14 +1,14 @@
 import { HabitStats } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "../query/keys";
+import { fetcher } from "@/utils/fetcher";
 
-const fetchHabitsChartData = async (
-  daysBack: string,
-): Promise<HabitStats[]> => {
-  const res = await fetch(`/api/habits-chart-data?daysBack=${daysBack}`);
-  if (!res.ok) throw new Error("Failed to fetch chart data");
-  return res.json();
-};
+const fetchHabitsChartData = (daysBack: string) =>
+  fetcher<HabitStats[]>(
+    `/api/habits-chart-data?daysBack=${daysBack}`,
+    "Failed to load chart data",
+  );
+
 export function useHabitsChartData(daysBack: string = "30") {
   return useQuery({
     queryKey: [queryKeys.chartData, daysBack],

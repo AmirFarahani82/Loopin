@@ -1,16 +1,10 @@
 import { DailyInsight } from "@/app/types";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "../query/keys";
+import { fetcher } from "@/utils/fetcher";
 
-const fetchDailyAiInsight = async (): Promise<DailyInsight> => {
-  const res = await fetch("/api/ai/daily");
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(`Failed to fetch ai analysis - ${error.message}`);
-  }
-  return res.json();
-};
-
+const fetchDailyAiInsight = () =>
+  fetcher<DailyInsight>("/api/ai/daily", "Failed to load ai analysis");
 export function useDailyAiInsight() {
   return useQuery({
     queryKey: queryKeys.aiDailyInsight,
