@@ -58,7 +58,7 @@ export async function requireSession() {
     error,
   } = await supabase.auth.getUser();
 
-  if (error || !user) throw new Error("No active session (user not authenticated)");
+  if (error || !user) redirect("/signup");
 
   return {
     id: user.id,
