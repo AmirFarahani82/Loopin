@@ -7,10 +7,15 @@ export async function GET(request: NextRequest) {
   const endDate = searchParams.get("endDate");
   if (!startDate || !endDate) {
     return NextResponse.json(
-      { error: "Missing required query parameters: startDate and endDate" },
+      { message: "Missing required query parameters: startDate and endDate" },
       { status: 400 },
     );
   }
-  const heatmapData = await getHeatmapData(startDate, endDate);
-  return NextResponse.json(heatmapData);
+  try {
+    const heatmapData = await getHeatmapData(startDate, endDate);
+    return NextResponse.json(heatmapData);
+  } catch (error) {
+    if (error instanceof Error)
+      return NextResponse.json({ message: error.message }, { status: 500 });
+  }
 }
